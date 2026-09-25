@@ -44,11 +44,20 @@ dependencies {
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
+  // Media3
+  implementation(libs.androidx.media3.common) // Shared media functionality
+  implementation(libs.androidx.media3.exoplayer) // Core player functionality (ExoPlayer)
+  implementation(libs.androidx.media3.session) // For background playback and system notification controls
+  implementation(libs.androidx.media3.ui) // UI components for the player (like PlayerView)
+  implementation(libs.androidx.media3.ui.compose.material3) // For Material 3 Compose components
+
   testImplementation(libs.junit)
+
   androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.compose.ui.test.junit4)
   androidTestImplementation(libs.androidx.espresso.core)
   androidTestImplementation(libs.androidx.junit)
+
   debugImplementation(libs.androidx.compose.ui.test.manifest)
   debugImplementation(libs.androidx.compose.ui.tooling)
 }
