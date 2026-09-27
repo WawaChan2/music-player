@@ -1,4 +1,4 @@
-package com.wawa.musicplayer.ui.screen
+package com.wawa.musicplayer.ui.screen.navigation
 
 import androidx.annotation.StringRes
 import com.wawa.musicplayer.R

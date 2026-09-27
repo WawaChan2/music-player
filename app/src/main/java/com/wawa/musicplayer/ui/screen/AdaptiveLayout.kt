@@ -10,22 +10,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.wawa.musicplayer.ui.screen.navigation.NavigationUiState
 
 @Composable
-fun AdaptiveScreen(
+fun AdaptiveLayout(
   windowSizeClass: WindowSizeClass,
+  navigationUiState: NavigationUiState,
   modifier: Modifier = Modifier
 ) {
   when (windowSizeClass.widthSizeClass) {
-    WindowWidthSizeClass.Compact -> CompactScreen(modifier = modifier)
-    WindowWidthSizeClass.Medium -> MediumScreen(modifier = modifier)
-    WindowWidthSizeClass.Expanded -> ExpandedScreen(modifier = modifier)
-    else -> CompactScreen(modifier = modifier)
+    WindowWidthSizeClass.Compact -> CompactLayout(
+      navigationUiState = navigationUiState,
+      modifier = modifier
+    )
+    WindowWidthSizeClass.Medium -> MediumLayout(
+      navigationUiState = navigationUiState,
+      modifier = modifier
+    )
+    WindowWidthSizeClass.Expanded -> ExpandedLayout(
+      navigationUiState = navigationUiState,
+      modifier = modifier
+    )
+    else -> CompactLayout(
+      navigationUiState = navigationUiState,
+      modifier = modifier
+    )
   }
 }
 
 @Composable
-fun CompactScreen(modifier: Modifier = Modifier) {
+fun CompactLayout(
+  navigationUiState: NavigationUiState,
+  modifier: Modifier = Modifier
+) {
   Box(
     modifier = modifier
       .background(Color(0xFFFFD000))
@@ -37,7 +54,10 @@ fun CompactScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MediumScreen(modifier: Modifier = Modifier) {
+fun MediumLayout(
+  navigationUiState: NavigationUiState,
+  modifier: Modifier = Modifier
+) {
   Box(
     modifier = modifier
       .background(Color(0xFFFF9100))
@@ -49,7 +69,10 @@ fun MediumScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ExpandedScreen(modifier: Modifier = Modifier) {
+fun ExpandedLayout(
+  navigationUiState: NavigationUiState,
+  modifier: Modifier = Modifier
+) {
   Box(
     modifier = modifier
       .background(Color(0xFFFF3D00))

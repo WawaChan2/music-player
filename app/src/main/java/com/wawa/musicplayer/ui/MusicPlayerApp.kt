@@ -22,8 +22,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wawa.musicplayer.R
-import com.wawa.musicplayer.ui.screen.AdaptiveScreen
-import com.wawa.musicplayer.ui.screen.NavigationViewModel
+import com.wawa.musicplayer.ui.screen.AdaptiveLayout
+import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
 
 @Composable
 fun MusicPlayerApp(
@@ -63,8 +63,9 @@ fun MusicPlayerApp(
         MusicPlayerAppTopBar()
       }
     ) { innerPadding ->
-      AdaptiveScreen(
+      AdaptiveLayout(
         windowSizeClass = windowSizeClass,
+        navigationUiState = navigationUiState,
         modifier = Modifier.padding(innerPadding)
       )
     }
