@@ -1,6 +1,5 @@
 package com.wawa.musicplayer.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -9,7 +8,6 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.wawa.musicplayer.ui.screen.navigation.NavigationUiState
 
 @Composable
@@ -23,14 +21,17 @@ fun AdaptiveLayout(
       navigationUiState = navigationUiState,
       modifier = modifier
     )
+
     WindowWidthSizeClass.Medium -> MediumLayout(
       navigationUiState = navigationUiState,
       modifier = modifier
     )
+
     WindowWidthSizeClass.Expanded -> ExpandedLayout(
       navigationUiState = navigationUiState,
       modifier = modifier
     )
+
     else -> CompactLayout(
       navigationUiState = navigationUiState,
       modifier = modifier
@@ -44,9 +45,7 @@ fun CompactLayout(
   modifier: Modifier = Modifier
 ) {
   Box(
-    modifier = modifier
-      .background(Color(0xFFFFD000))
-      .fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center
   ) {
     Text(text = "Compact")
@@ -59,9 +58,7 @@ fun MediumLayout(
   modifier: Modifier = Modifier
 ) {
   Box(
-    modifier = modifier
-      .background(Color(0xFFFF9100))
-      .fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center
   ) {
     Text(text = "Medium")
@@ -74,9 +71,7 @@ fun ExpandedLayout(
   modifier: Modifier = Modifier
 ) {
   Box(
-    modifier = modifier
-      .background(Color(0xFFFF3D00))
-      .fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center
   ) {
     Text(text = "Expanded")
