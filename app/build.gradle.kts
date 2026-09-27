@@ -1,6 +1,8 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.devtools.ksp)
+  alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -52,6 +54,13 @@ dependencies {
   implementation(libs.androidx.media3.session) // For background playback and system notification controls
   implementation(libs.androidx.media3.ui) // UI components for the player (like PlayerView)
   implementation(libs.androidx.media3.ui.compose.material3) // For Material 3 Compose components
+  // DataStore
+  implementation(libs.androidx.datastore.preferences)
+  // Dagger Hilt Core
+  implementation(libs.hilt.android)
+  ksp(libs.hilt.android.compiler)
+  // Jetpack Compose Hilt Integration
+  implementation(libs.androidx.hilt.navigation.compose)
 
   testImplementation(libs.junit)
 
