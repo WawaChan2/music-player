@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NavigationViewModel @Inject constructor(private val navigationRepository: NavigationRepository) :
   ViewModel() {
-  val navigationUiState: StateFlow<NavigationUiState> = navigationRepository.destinationIdFlow.map {
+  val navigationUiState: StateFlow<NavigationUiState> = navigationRepository.labelIdFlow.map {
     NavigationUiState(it)
   }.stateIn(
     scope = viewModelScope,
@@ -23,9 +23,9 @@ class NavigationViewModel @Inject constructor(private val navigationRepository: 
     initialValue = NavigationUiState()
   )
 
-  fun setDestination(@StringRes destinationId: Int) {
+  fun setLabelId(@StringRes labelId: Int) {
     viewModelScope.launch {
-      navigationRepository.setDestinationId(destinationId)
+      navigationRepository.setLabelId(labelId)
     }
   }
 }

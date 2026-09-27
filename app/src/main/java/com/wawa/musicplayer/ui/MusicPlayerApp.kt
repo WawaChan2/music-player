@@ -1,7 +1,5 @@
 package com.wawa.musicplayer.ui
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,8 +20,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wawa.musicplayer.R
-import com.wawa.musicplayer.ui.screen.AdaptiveLayout
+import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
+import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
 
 @Composable
 fun MusicPlayerApp(
@@ -34,18 +33,18 @@ fun MusicPlayerApp(
 
   NavigationSuiteScaffold(
     navigationSuiteItems = {
-      AppDestination.entries.forEach { destination ->
+      TopLevelDestination.entries.forEach { destination ->
         item(
-          selected = destination.titleId == navigationUiState.destinationId,
-          onClick = { navigationViewModel.setDestination(destination.titleId) },
+          selected = destination.labelId == navigationUiState.labelId,
+          onClick = { navigationViewModel.setLabelId(destination.labelId) },
           icon = {
             Icon(
               imageVector = ImageVector.vectorResource(destination.iconId),
-              contentDescription = stringResource(destination.titleId)
+              contentDescription = stringResource(destination.labelId)
             )
           },
           label = {
-            Text(text = stringResource(destination.titleId))
+            Text(text = stringResource(destination.labelId))
           }
         )
       }
@@ -63,8 +62,7 @@ fun MusicPlayerApp(
         MusicPlayerAppTopBar()
       }
     ) { innerPadding ->
-      AdaptiveLayout(
-        windowSizeClass = windowSizeClass,
+      AppNavigation(
         navigationUiState = navigationUiState,
         modifier = Modifier.padding(innerPadding)
       )
@@ -83,9 +81,4 @@ fun MusicPlayerAppTopBar(
     },
     modifier = modifier
   )
-}
-
-enum class AppDestination(@StringRes val titleId: Int, @DrawableRes val iconId: Int) {
-  PLAYLIST(titleId = R.string.playlist_nav, iconId = R.drawable.music_note_2_24px),
-  UPLOAD(titleId = R.string.upload_nav, iconId = R.drawable.upload_24px)
 }

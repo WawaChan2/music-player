@@ -1,4 +1,4 @@
-package com.wawa.musicplayer.ui.screen.upload
+package com.wawa.musicplayer.ui.screen.playlist
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,11 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun UploadScreen(modifier: Modifier = Modifier) {
+fun PickerScreen(modifier: Modifier = Modifier) {
   Box(
     modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center
   ) {
-    Text(text = "Upload")
+    Text(text = "Picker")
   }
 }

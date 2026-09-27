@@ -11,17 +11,17 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class NavigationRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
-  val destinationIdFlow: Flow<Int> = dataStore.data.map { preferences ->
-    preferences[DESTINATION_ID] ?: R.string.playlist_nav
+  val labelIdFlow: Flow<Int> = dataStore.data.map { preferences ->
+    preferences[LABEL_ID] ?: R.string.playlist_nav
   }
 
-  suspend fun setDestinationId(@StringRes destinationId: Int) {
+  suspend fun setLabelId(@StringRes labelId: Int) {
     dataStore.edit { preferences ->
-      preferences[DESTINATION_ID] = destinationId
+      preferences[LABEL_ID] = labelId
     }
   }
 
   private companion object {
-    val DESTINATION_ID = intPreferencesKey("destination_id")
+    val LABEL_ID = intPreferencesKey("label_id")
   }
 }

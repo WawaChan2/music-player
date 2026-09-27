@@ -4,5 +4,5 @@ import androidx.annotation.StringRes
 import com.wawa.musicplayer.R
 
 data class NavigationUiState(
-  @StringRes val destinationId: Int = R.string.playlist_nav
+  @StringRes val labelId: Int = R.string.playlist_nav
 )

@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.devtools.ksp)
   alias(libs.plugins.hilt.android)
 }
@@ -49,6 +50,7 @@ dependencies {
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.navigation.compose)
   // Media3
   implementation(libs.androidx.media3.common) // Shared media functionality
   implementation(libs.androidx.media3.exoplayer) // Core player functionality (ExoPlayer)
@@ -62,6 +64,8 @@ dependencies {
   ksp(libs.hilt.android.compiler)
   // Jetpack Compose Hilt Integration
   implementation(libs.androidx.hilt.navigation.compose)
+  // Kotlin JSON Serialization
+  implementation(libs.kotlinx.serialization.json)
 
   testImplementation(libs.junit)
 
