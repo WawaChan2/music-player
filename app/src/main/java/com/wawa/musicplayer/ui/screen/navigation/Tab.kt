@@ -2,10 +2,11 @@ package com.wawa.musicplayer.ui.screen.navigation
 
 import kotlinx.serialization.Serializable
 
-sealed interface Graph
+@Serializable
+sealed interface Tab
 
 @Serializable
-data object PlaylistGraph : Graph
+data object PlaylistTab : Tab
 
 @Serializable
-data object UploadGraph : Graph
+data object UploadTab : Tab

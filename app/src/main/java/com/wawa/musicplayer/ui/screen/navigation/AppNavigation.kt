@@ -2,32 +2,24 @@ package com.wawa.musicplayer.ui.screen.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import androidx.navigation.compose.rememberNavController
-import com.wawa.musicplayer.ui.screen.playlist.PickerScreen
-import com.wawa.musicplayer.ui.screen.playlist.PlayerScreen
+import com.wawa.musicplayer.ui.screen.playlist.PlaylistScreen
 import com.wawa.musicplayer.ui.screen.upload.UploadScreen
 
 @Composable
 fun AppNavigation(
-  navigationUiState: NavigationUiState,
+  navigationState: NavigationState,
+  onNavigateToPlayer: () -> Unit,
+  onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val navController = rememberNavController()
+  when (navigationState.selectedTab) {
+    PlaylistTab -> PlaylistScreen(
+      navigationState = navigationState,
+      onNavigateToPlayer = onNavigateToPlayer,
+      onNavigateBack = onNavigateBack,
+      modifier = modifier
+    )
 
-  NavHost(
-    navController = navController,
-    startDestination = TopLevelDestination.getByLabelId(navigationUiState.labelId)!!.graph
-  ) {
-    navigation<PlaylistGraph>(startDestination = Picker) {
-      composable<Picker> { PickerScreen(modifier = modifier) }
-      composable<Player> { PlayerScreen(modifier = modifier) }
-    }
-
-    navigation<UploadGraph>(startDestination = Upload) {
-      composable<Upload> { UploadScreen(modifier = modifier) }
-    }
+    UploadTab -> UploadScreen(modifier = modifier)
   }
 }

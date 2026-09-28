@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wawa.musicplayer.R
 import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
+import com.wawa.musicplayer.ui.screen.navigation.Player
 import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
 
 @Composable
@@ -29,22 +30,22 @@ fun MusicPlayerApp(
   windowSizeClass: WindowSizeClass,
   navigationViewModel: NavigationViewModel = hiltViewModel()
 ) {
-  val navigationUiState by navigationViewModel.navigationUiState.collectAsStateWithLifecycle()
+  val navigationState by navigationViewModel.navigationState.collectAsStateWithLifecycle()
 
   NavigationSuiteScaffold(
     navigationSuiteItems = {
-      TopLevelDestination.entries.forEach { destination ->
+      TopLevelDestination.entries.forEach { topLevelDestination ->
         item(
-          selected = destination.labelId == navigationUiState.labelId,
-          onClick = { navigationViewModel.setLabelId(destination.labelId) },
+          selected = topLevelDestination.tab == navigationState.selectedTab,
+          onClick = { navigationViewModel.selectTab(topLevelDestination.tab) },
           icon = {
             Icon(
-              imageVector = ImageVector.vectorResource(destination.iconId),
-              contentDescription = stringResource(destination.labelId)
+              imageVector = ImageVector.vectorResource(topLevelDestination.iconId),
+              contentDescription = stringResource(topLevelDestination.labelId)
             )
           },
           label = {
-            Text(text = stringResource(destination.labelId))
+            Text(text = stringResource(topLevelDestination.labelId))
           }
         )
       }
@@ -63,7 +64,18 @@ fun MusicPlayerApp(
       }
     ) { innerPadding ->
       AppNavigation(
-        navigationUiState = navigationUiState,
+        navigationState = navigationState,
+        onNavigateToPlayer = {
+          navigationViewModel.navigateToScreenOnTab(
+            tab = navigationState.selectedTab,
+            to = Player
+          )
+        },
+        onNavigateBack = {
+          navigationViewModel.navigateBackOnTab(
+            tab = navigationState.selectedTab
+          )
+        },
         modifier = Modifier.padding(innerPadding)
       )
     }
