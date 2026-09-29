@@ -64,6 +64,7 @@ fun MusicPlayerApp(
       }
     ) { innerPadding ->
       AppNavigation(
+        windowSizeClass = windowSizeClass,
         navigationState = navigationState,
         onNavigateToPlayer = {
           navigationViewModel.navigateToScreenOnTab(

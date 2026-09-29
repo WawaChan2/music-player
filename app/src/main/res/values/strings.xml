@@ -3,4 +3,6 @@
 
     <string name="playlist_nav">Playlist</string>
     <string name="upload_nav">Upload</string>
+
+    <string name="upload_audio_button_text">Upload audio</string>
 </resources>

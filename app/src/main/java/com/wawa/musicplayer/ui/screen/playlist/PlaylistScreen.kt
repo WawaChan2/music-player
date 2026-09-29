@@ -1,5 +1,6 @@
 package com.wawa.musicplayer.ui.screen.playlist
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.wawa.musicplayer.ui.screen.navigation.NavigationState
@@ -8,6 +9,7 @@ import com.wawa.musicplayer.ui.screen.navigation.Player
 
 @Composable
 fun PlaylistScreen(
+  windowSizeClass: WindowSizeClass,
   navigationState: NavigationState,
   onNavigateToPlayer: () -> Unit,
   onNavigateBack: () -> Unit,
@@ -17,11 +19,13 @@ fun PlaylistScreen(
 
   if (currentScreen == Player) {
     PlayerScreen(
+      windowSizeClass = windowSizeClass,
       onNavigateBack = onNavigateBack,
       modifier = modifier
     )
   } else if (currentScreen == Picker) {
     PickerScreen(
+      windowSizeClass = windowSizeClass,
       onNavigateToPlayer = onNavigateToPlayer,
       modifier = modifier
     )
