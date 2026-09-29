@@ -5,4 +5,10 @@
     <string name="upload_nav">Upload</string>
 
     <string name="upload_audio_button_text">Upload audio</string>
+
+    <string name="track_title_text_field">Track title</string>
+    <string name="artist_name_text_field">Artist name</string>
+    <string name="lyrics_text_field">Lyrics</string>
+
+    <string name="empty_field_error_message">Required field cannot be empty</string>
 </resources>

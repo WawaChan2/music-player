@@ -19,18 +19,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wawa.musicplayer.R
 import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
 import com.wawa.musicplayer.ui.screen.navigation.Player
 import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
+import com.wawa.musicplayer.ui.screen.upload.UploadViewModel
 
 @Composable
 fun MusicPlayerApp(
   windowSizeClass: WindowSizeClass,
-  navigationViewModel: NavigationViewModel = hiltViewModel()
+  navigationViewModel: NavigationViewModel = hiltViewModel(),
+  uploadViewModel: UploadViewModel = viewModel()
 ) {
   val navigationState by navigationViewModel.navigationState.collectAsStateWithLifecycle()
+  val uploadState by uploadViewModel.uploadState.collectAsStateWithLifecycle()
 
   NavigationSuiteScaffold(
     navigationSuiteItems = {
@@ -77,6 +81,10 @@ fun MusicPlayerApp(
             tab = navigationState.selectedTab
           )
         },
+        uploadState = uploadState,
+        onTrackTitleTextFieldChange = uploadViewModel::onTrackTitleChange,
+        onArtistNameTextFieldChange = uploadViewModel::onArtistNameChange,
+        onLyricsTextFieldChange = uploadViewModel::onLyricsChange,
         modifier = Modifier.padding(innerPadding)
       )
     }

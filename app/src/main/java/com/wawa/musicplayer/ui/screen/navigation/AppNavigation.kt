@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wawa.musicplayer.ui.screen.playlist.PlaylistScreen
 import com.wawa.musicplayer.ui.screen.upload.UploadScreen
+import com.wawa.musicplayer.ui.screen.upload.UploadState
 
 @Composable
 fun AppNavigation(
@@ -15,6 +16,10 @@ fun AppNavigation(
   navigationState: NavigationState,
   onNavigateToPlayer: () -> Unit,
   onNavigateBack: () -> Unit,
+  uploadState: UploadState,
+  onTrackTitleTextFieldChange: (String) -> Unit,
+  onArtistNameTextFieldChange: (String) -> Unit,
+  onLyricsTextFieldChange: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (navigationState.selectedTab) {
@@ -25,23 +30,18 @@ fun AppNavigation(
       onNavigateBack = onNavigateBack,
       modifier = modifier
         .fillMaxSize()
-        .padding(
-          start = 16.dp,
-          end = 16.dp,
-          bottom = 16.dp
-        )
+        .padding(top = 8.dp, end = 16.dp, bottom = 16.dp, start = 16.dp)
     )
 
     UploadTab -> UploadScreen(
       windowSizeClass = windowSizeClass,
+      uploadState = uploadState,
+      onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
+      onArtistNameTextFieldChange = onArtistNameTextFieldChange,
+      onLyricsTextFieldChange = onLyricsTextFieldChange,
       modifier = modifier
         .fillMaxSize()
-        .padding(
-          start = 16.dp,
-          top = 8.dp,
-          end = 16.dp,
-          bottom = 16.dp
-        )
+        .padding(top = 8.dp, end = 16.dp, bottom = 16.dp, start = 16.dp)
     )
   }
 }
