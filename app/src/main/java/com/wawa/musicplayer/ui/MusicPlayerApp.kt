@@ -89,14 +89,19 @@ fun MusicPlayerApp(
           if (mimeType?.startsWith("audio/") == true) {
             val audioMetadata = getAudioMetadata(context, uri)
 
-            uploadViewModel.onTrackTitleChange(audioMetadata.trackTitle)
-            uploadViewModel.onArtistNameChange(audioMetadata.artistName)
+            audioMetadata?.let { audioMetadata ->
+              uploadViewModel.onTrackTitleChange(audioMetadata.trackTitle)
+              uploadViewModel.onArtistNameChange(audioMetadata.artistName)
+              uploadViewModel.setBitmap(audioMetadata.bitmap)
 
-            uploadViewModel.setUploadProcessingState(UploadSuccess)
+              uploadViewModel.setUploadProcessingState(UploadSuccess)
+            } ?: {
+              uploadViewModel.setUploadProcessingState(UploadError)
+            }
           } else {
             uploadViewModel.setUploadProcessingState(UploadIncorrectMimeType)
           }
-        } ?: uploadViewModel.setUploadProcessingState(UploadError)
+        }
       }
 
       AppNavigation(

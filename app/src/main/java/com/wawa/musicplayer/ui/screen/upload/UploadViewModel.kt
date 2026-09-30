@@ -1,5 +1,6 @@
 package com.wawa.musicplayer.ui.screen.upload
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,12 @@ class UploadViewModel : ViewModel() {
   fun setUploadProcessingState(uploadProcessingState: UploadProcessingState) {
     _uploadState.update { currentState ->
       currentState.copy(uploadProcessingState = uploadProcessingState)
+    }
+  }
+
+  fun setBitmap(bitmap: Bitmap?) {
+    _uploadState.update { currentState ->
+      currentState.copy(bitmap = bitmap)
     }
   }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,11 +23,19 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.wawa.musicplayer.R
 import com.wawa.musicplayer.ui.extension.dashedBorder
 
@@ -90,7 +99,7 @@ fun CompactUploadScreen(
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(32.dp),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     UploadAudioBox(
@@ -116,7 +125,7 @@ fun CompactUploadScreen(
         ErrorWarning()
       }
     ) {
-      ErrorWarning()
+
     }
   }
 }
@@ -132,7 +141,7 @@ fun MediumUploadScreen(
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(32.dp),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     UploadAudioBox(
@@ -158,10 +167,10 @@ fun MediumUploadScreen(
         )
       },
       incorrectMimeType = {
-        IncorrectMimeTypeWarning()
+        IncorrectMimeTypeWarning(iconSize = 84.dp)
       },
       error = {
-        ErrorWarning()
+        ErrorWarning(iconSize = 84.dp)
       }
     ) {
 
@@ -180,7 +189,7 @@ fun ExpandedUploadScreen(
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(32.dp),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     UploadAudioBox(
@@ -208,10 +217,10 @@ fun ExpandedUploadScreen(
         )
       },
       incorrectMimeType = {
-        IncorrectMimeTypeWarning()
+        IncorrectMimeTypeWarning(iconSize = 84.dp)
       },
       error = {
-        ErrorWarning()
+        ErrorWarning(iconSize = 84.dp)
       }
     ) {
 
@@ -308,15 +317,31 @@ fun UploadForm(
   onLyricsTextFieldChange: (String) -> Unit,
   modifier: Modifier = Modifier,
   isVariant: Boolean = false,
+  coverArtSize: Dp = 160.dp,
   verticalSpacing: Dp = 4.dp,
   textFieldWidthFraction: Float = .9f
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+    verticalArrangement = Arrangement.spacedBy(verticalSpacing),
+    horizontalAlignment = Alignment.CenterHorizontally
   ) {
     val isTrackTitleTextFieldStateValid = uploadState.trackTitle.isNotBlank()
     val isArtistNameTextFieldStateValid = uploadState.artistName.isNotBlank()
+
+    AsyncImage(
+      model = ImageRequest.Builder(LocalContext.current)
+        .data(uploadState.bitmap)
+        .crossfade(true)
+        .build(),
+      contentDescription = null,
+      modifier = Modifier
+        .padding(16.dp)
+        .size(coverArtSize)
+        .clip(CircleShape),
+      error = painterResource(R.drawable.image_placeholder),
+      contentScale = ContentScale.Crop
+    )
 
     if (isVariant) {
       Row(
@@ -389,22 +414,30 @@ fun UploadForm(
 }
 
 @Composable
-fun ErrorWarning(modifier: Modifier = Modifier) {
+fun ErrorWarning(
+  modifier: Modifier = Modifier,
+  iconSize: Dp = 64.dp
+) {
   WarningLayout(
     title = stringResource(R.string.error_warning_title),
     subtitle = stringResource(R.string.error_warning_subtitle),
-    imageVector = ImageVector.vectorResource(R.drawable.error_24px),
-    modifier = modifier
+    icon = ImageVector.vectorResource(R.drawable.error_24px),
+    modifier = modifier,
+    iconSize = iconSize
   )
 }
 
 @Composable
-fun IncorrectMimeTypeWarning(modifier: Modifier = Modifier) {
+fun IncorrectMimeTypeWarning(
+  modifier: Modifier = Modifier,
+  iconSize: Dp = 64.dp
+) {
   WarningLayout(
     title = stringResource(R.string.incorrect_mime_type_warning_title),
     subtitle = stringResource(R.string.incorrect_mime_type_warning_subtitle),
-    imageVector = ImageVector.vectorResource(R.drawable.warning_24px),
-    modifier = modifier
+    icon = ImageVector.vectorResource(R.drawable.warning_24px),
+    modifier = modifier,
+    iconSize = iconSize
   )
 }
 
@@ -412,22 +445,31 @@ fun IncorrectMimeTypeWarning(modifier: Modifier = Modifier) {
 fun WarningLayout(
   title: String,
   subtitle: String,
-  imageVector: ImageVector,
-  modifier: Modifier = Modifier
+  icon: ImageVector,
+  modifier: Modifier = Modifier,
+  iconSize: Dp = 64.dp
 ) {
-  Column(modifier = modifier) {
+  Column(
+    modifier = modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
     Text(
       text = title,
-      color = MaterialTheme.colorScheme.error
+      color = MaterialTheme.colorScheme.error,
+      textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.headlineLarge
     )
     Icon(
-      imageVector = imageVector,
+      imageVector = icon,
       contentDescription = null,
+      modifier = Modifier.size(iconSize),
       tint = MaterialTheme.colorScheme.error
     )
     Text(
       text = subtitle,
-      color = MaterialTheme.colorScheme.error
+      color = MaterialTheme.colorScheme.error,
+      textAlign = TextAlign.Center
     )
   }
 }

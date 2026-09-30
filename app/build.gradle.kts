@@ -65,6 +65,8 @@ dependencies {
   implementation(libs.androidx.hilt.navigation.compose)
   // Kotlin JSON Serialization
   implementation(libs.kotlinx.serialization.json)
+  // Coil Library
+  implementation(libs.coil.compose)
 
   testImplementation(libs.junit)
 
