@@ -11,4 +11,10 @@
     <string name="lyrics_text_field">Lyrics</string>
 
     <string name="empty_field_error_message">Required field cannot be empty</string>
+
+    <string name="error_warning_title">Error</string>
+    <string name="error_warning_subtitle">Something went wrong, please try again.</string>
+
+    <string name="incorrect_mime_type_warning_title">Invalid audio format</string>
+    <string name="incorrect_mime_type_warning_subtitle">Please select compatible audio formats such as .mp3, .wav, .m4a.</string>
 </resources>

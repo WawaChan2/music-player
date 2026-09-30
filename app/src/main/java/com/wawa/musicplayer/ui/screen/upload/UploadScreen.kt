@@ -1,14 +1,17 @@
 package com.wawa.musicplayer.ui.screen.upload
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -112,7 +115,9 @@ fun CompactUploadScreen(
       error = {
         ErrorWarning()
       }
-    ) { }
+    ) {
+      ErrorWarning()
+    }
   }
 }
 
@@ -139,7 +144,10 @@ fun MediumUploadScreen(
     BottomContent(
       uploadProcessingState = uploadState.uploadProcessingState,
       loading = {
-        LoadingSpinner()
+        LoadingSpinner(
+          size = 160.dp,
+          strokeWidth = 8.5.dp
+        )
       },
       success = {
         UploadForm(
@@ -155,7 +163,9 @@ fun MediumUploadScreen(
       error = {
         ErrorWarning()
       }
-    ) { }
+    ) {
+
+    }
   }
 }
 
@@ -182,7 +192,10 @@ fun ExpandedUploadScreen(
     BottomContent(
       uploadProcessingState = uploadState.uploadProcessingState,
       loading = {
-        LoadingSpinner()
+        LoadingSpinner(
+          size = 192.dp,
+          strokeWidth = 9.dp
+        )
       },
       success = {
         UploadForm(
@@ -200,7 +213,9 @@ fun ExpandedUploadScreen(
       error = {
         ErrorWarning()
       }
-    ) { }
+    ) {
+
+    }
   }
 }
 
@@ -265,8 +280,24 @@ fun BottomContent(
 }
 
 @Composable
-fun LoadingSpinner(modifier: Modifier = Modifier) {
-
+fun LoadingSpinner(
+  modifier: Modifier = Modifier,
+  size: Dp = 128.dp,
+  strokeWidth: Dp = 8.dp
+) {
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center
+  ) {
+    CircularProgressIndicator(
+      modifier = modifier.size(size),
+      strokeWidth = strokeWidth
+    )
+    Text(
+      text = "Loading...",
+      color = MaterialTheme.colorScheme.primary
+    )
+  }
 }
 
 @Composable
@@ -359,10 +390,44 @@ fun UploadForm(
 
 @Composable
 fun ErrorWarning(modifier: Modifier = Modifier) {
-
+  WarningLayout(
+    title = stringResource(R.string.error_warning_title),
+    subtitle = stringResource(R.string.error_warning_subtitle),
+    imageVector = ImageVector.vectorResource(R.drawable.error_24px),
+    modifier = modifier
+  )
 }
 
 @Composable
 fun IncorrectMimeTypeWarning(modifier: Modifier = Modifier) {
+  WarningLayout(
+    title = stringResource(R.string.incorrect_mime_type_warning_title),
+    subtitle = stringResource(R.string.incorrect_mime_type_warning_subtitle),
+    imageVector = ImageVector.vectorResource(R.drawable.warning_24px),
+    modifier = modifier
+  )
+}
 
+@Composable
+fun WarningLayout(
+  title: String,
+  subtitle: String,
+  imageVector: ImageVector,
+  modifier: Modifier = Modifier
+) {
+  Column(modifier = modifier) {
+    Text(
+      text = title,
+      color = MaterialTheme.colorScheme.error
+    )
+    Icon(
+      imageVector = imageVector,
+      contentDescription = null,
+      tint = MaterialTheme.colorScheme.error
+    )
+    Text(
+      text = subtitle,
+      color = MaterialTheme.colorScheme.error
+    )
+  }
 }
