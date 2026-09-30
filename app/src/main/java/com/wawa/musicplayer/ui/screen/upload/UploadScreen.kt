@@ -2,6 +2,7 @@ package com.wawa.musicplayer.ui.screen.upload
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,12 +34,13 @@ fun UploadScreen(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
+  uploadAudioButtonOnClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> CompactUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = {},
+      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
@@ -47,7 +49,7 @@ fun UploadScreen(
 
     WindowWidthSizeClass.Medium -> MediumUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = {},
+      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
@@ -56,7 +58,7 @@ fun UploadScreen(
 
     WindowWidthSizeClass.Expanded -> ExpandedUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = {},
+      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
@@ -65,7 +67,7 @@ fun UploadScreen(
 
     else -> CompactUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = {},
+      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
@@ -77,10 +79,10 @@ fun UploadScreen(
 @Composable
 fun CompactUploadScreen(
   uploadState: UploadState,
-  uploadAudioButtonOnClick: () -> Unit,
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
+  uploadAudioButtonOnClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(
@@ -91,22 +93,36 @@ fun CompactUploadScreen(
     UploadAudioBox(
       uploadAudioButtonOnClick = uploadAudioButtonOnClick
     )
-    UploadForm(
-      uploadState = uploadState,
-      onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
-      onArtistNameTextFieldChange = onArtistNameTextFieldChange,
-      onLyricsTextFieldChange = onLyricsTextFieldChange
-    )
+    BottomContent(
+      uploadProcessingState = uploadState.uploadProcessingState,
+      loading = {
+        LoadingSpinner()
+      },
+      success = {
+        UploadForm(
+          uploadState = uploadState,
+          onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
+          onArtistNameTextFieldChange = onArtistNameTextFieldChange,
+          onLyricsTextFieldChange = onLyricsTextFieldChange
+        )
+      },
+      incorrectMimeType = {
+        IncorrectMimeTypeWarning()
+      },
+      error = {
+        ErrorWarning()
+      }
+    ) { }
   }
 }
 
 @Composable
 fun MediumUploadScreen(
   uploadState: UploadState,
-  uploadAudioButtonOnClick: () -> Unit,
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
+  uploadAudioButtonOnClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(
@@ -120,22 +136,36 @@ fun MediumUploadScreen(
       uploadIconSize = 84.dp,
       padding = 16.dp
     )
-    UploadForm(
-      uploadState = uploadState,
-      onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
-      onArtistNameTextFieldChange = onArtistNameTextFieldChange,
-      onLyricsTextFieldChange = onLyricsTextFieldChange
-    )
+    BottomContent(
+      uploadProcessingState = uploadState.uploadProcessingState,
+      loading = {
+        LoadingSpinner()
+      },
+      success = {
+        UploadForm(
+          uploadState = uploadState,
+          onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
+          onArtistNameTextFieldChange = onArtistNameTextFieldChange,
+          onLyricsTextFieldChange = onLyricsTextFieldChange
+        )
+      },
+      incorrectMimeType = {
+        IncorrectMimeTypeWarning()
+      },
+      error = {
+        ErrorWarning()
+      }
+    ) { }
   }
 }
 
 @Composable
 fun ExpandedUploadScreen(
   uploadState: UploadState,
-  uploadAudioButtonOnClick: () -> Unit,
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
+  uploadAudioButtonOnClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(
@@ -149,12 +179,28 @@ fun ExpandedUploadScreen(
       uploadIconSize = 84.dp,
       padding = 20.dp
     )
-    UploadForm(
-      uploadState = uploadState,
-      onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
-      onArtistNameTextFieldChange = onArtistNameTextFieldChange,
-      onLyricsTextFieldChange = onLyricsTextFieldChange
-    )
+    BottomContent(
+      uploadProcessingState = uploadState.uploadProcessingState,
+      loading = {
+        LoadingSpinner()
+      },
+      success = {
+        UploadForm(
+          uploadState = uploadState,
+          onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
+          onArtistNameTextFieldChange = onArtistNameTextFieldChange,
+          onLyricsTextFieldChange = onLyricsTextFieldChange,
+          isVariant = true,
+          textFieldWidthFraction = .95f
+        )
+      },
+      incorrectMimeType = {
+        IncorrectMimeTypeWarning()
+      },
+      error = {
+        ErrorWarning()
+      }
+    ) { }
   }
 }
 
@@ -201,45 +247,107 @@ fun UploadAudioBox(
 }
 
 @Composable
+fun BottomContent(
+  uploadProcessingState: UploadProcessingState?,
+  loading: @Composable () -> Unit,
+  success: @Composable () -> Unit,
+  incorrectMimeType: @Composable () -> Unit,
+  error: @Composable () -> Unit,
+  initial: @Composable () -> Unit
+) {
+  when (uploadProcessingState) {
+    UploadLoading -> loading()
+    UploadSuccess -> success()
+    UploadIncorrectMimeType -> incorrectMimeType()
+    UploadError -> error()
+    else -> initial()
+  }
+}
+
+@Composable
+fun LoadingSpinner(modifier: Modifier = Modifier) {
+
+}
+
+@Composable
 fun UploadForm(
   uploadState: UploadState,
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
   modifier: Modifier = Modifier,
+  isVariant: Boolean = false,
+  verticalSpacing: Dp = 4.dp,
   textFieldWidthFraction: Float = .9f
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(4.dp)
+    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
   ) {
     val isTrackTitleTextFieldStateValid = uploadState.trackTitle.isNotBlank()
     val isArtistNameTextFieldStateValid = uploadState.artistName.isNotBlank()
 
-    TextField(
-      value = uploadState.trackTitle,
-      onValueChange = onTrackTitleTextFieldChange,
-      modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
-      label = { Text(text = stringResource(R.string.track_title_text_field)) },
-      supportingText = {
-        if (!isTrackTitleTextFieldStateValid) {
-          Text(text = stringResource(R.string.empty_field_error_message))
-        }
-      },
-      isError = !isTrackTitleTextFieldStateValid
-    )
-    TextField(
-      value = uploadState.artistName,
-      onValueChange = onArtistNameTextFieldChange,
-      modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
-      label = { Text(text = stringResource(R.string.artist_name_text_field)) },
-      supportingText = {
-        if (!isArtistNameTextFieldStateValid) {
-          Text(text = stringResource(R.string.empty_field_error_message))
-        }
-      },
-      isError = !isArtistNameTextFieldStateValid
-    )
+    if (isVariant) {
+      Row(
+        modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+      ) {
+        TextField(
+          value = uploadState.trackTitle,
+          onValueChange = onTrackTitleTextFieldChange,
+          modifier = Modifier.weight(1f),
+          label = { Text(text = stringResource(R.string.track_title_text_field)) },
+          supportingText = {
+            if (!isTrackTitleTextFieldStateValid) {
+              Text(text = stringResource(R.string.empty_field_error_message))
+            }
+          },
+          isError = !isTrackTitleTextFieldStateValid,
+          singleLine = true
+        )
+        TextField(
+          value = uploadState.artistName,
+          onValueChange = onArtistNameTextFieldChange,
+          modifier = Modifier.weight(1f),
+          label = { Text(text = stringResource(R.string.artist_name_text_field)) },
+          supportingText = {
+            if (!isArtistNameTextFieldStateValid) {
+              Text(text = stringResource(R.string.empty_field_error_message))
+            }
+          },
+          isError = !isArtistNameTextFieldStateValid,
+          singleLine = true
+        )
+      }
+    } else {
+      TextField(
+        value = uploadState.trackTitle,
+        onValueChange = onTrackTitleTextFieldChange,
+        modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
+        label = { Text(text = stringResource(R.string.track_title_text_field)) },
+        supportingText = {
+          if (!isTrackTitleTextFieldStateValid) {
+            Text(text = stringResource(R.string.empty_field_error_message))
+          }
+        },
+        isError = !isTrackTitleTextFieldStateValid,
+        singleLine = true
+      )
+      TextField(
+        value = uploadState.artistName,
+        onValueChange = onArtistNameTextFieldChange,
+        modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
+        label = { Text(text = stringResource(R.string.artist_name_text_field)) },
+        supportingText = {
+          if (!isArtistNameTextFieldStateValid) {
+            Text(text = stringResource(R.string.empty_field_error_message))
+          }
+        },
+        isError = !isArtistNameTextFieldStateValid,
+        singleLine = true
+      )
+    }
+
     OutlinedTextField(
       value = uploadState.lyrics,
       onValueChange = onLyricsTextFieldChange,
@@ -247,4 +355,14 @@ fun UploadForm(
       label = { Text(text = stringResource(R.string.lyrics_text_field)) }
     )
   }
+}
+
+@Composable
+fun ErrorWarning(modifier: Modifier = Modifier) {
+
+}
+
+@Composable
+fun IncorrectMimeTypeWarning(modifier: Modifier = Modifier) {
+
 }

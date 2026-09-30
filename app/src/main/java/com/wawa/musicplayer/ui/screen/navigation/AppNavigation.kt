@@ -20,6 +20,7 @@ fun AppNavigation(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
+  uploadAudioButtonOnClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (navigationState.selectedTab) {
@@ -39,6 +40,7 @@ fun AppNavigation(
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
+      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       modifier = modifier
         .fillMaxSize()
         .padding(top = 8.dp, end = 16.dp, bottom = 16.dp, start = 16.dp)

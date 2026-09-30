@@ -10,6 +10,12 @@ class UploadViewModel : ViewModel() {
   private val _uploadState = MutableStateFlow(UploadState())
   val uploadState: StateFlow<UploadState> = _uploadState.asStateFlow()
 
+  fun setUploadProcessingState(uploadProcessingState: UploadProcessingState) {
+    _uploadState.update { currentState ->
+      currentState.copy(uploadProcessingState = uploadProcessingState)
+    }
+  }
+
   fun onTrackTitleChange(newTrackTitle: String) {
     _uploadState.update { currentState ->
       currentState.copy(trackTitle = newTrackTitle)

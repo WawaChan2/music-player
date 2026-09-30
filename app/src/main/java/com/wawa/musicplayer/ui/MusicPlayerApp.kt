@@ -1,5 +1,7 @@
 package com.wawa.musicplayer.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,16 +17,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.wawa.musicplayer.MIME_TYPE_AUDIO
 import com.wawa.musicplayer.R
+import com.wawa.musicplayer.media.getAudioMetadata
 import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
 import com.wawa.musicplayer.ui.screen.navigation.Player
 import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
+import com.wawa.musicplayer.ui.screen.upload.UploadError
+import com.wawa.musicplayer.ui.screen.upload.UploadIncorrectMimeType
+import com.wawa.musicplayer.ui.screen.upload.UploadLoading
+import com.wawa.musicplayer.ui.screen.upload.UploadSuccess
 import com.wawa.musicplayer.ui.screen.upload.UploadViewModel
 
 @Composable
@@ -67,6 +76,29 @@ fun MusicPlayerApp(
         MusicPlayerAppTopBar()
       }
     ) { innerPadding ->
+      val context = LocalContext.current
+
+      val audioPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+      ) { uri ->
+        uri?.let {
+          uploadViewModel.setUploadProcessingState(UploadLoading)
+
+          val mimeType = context.contentResolver.getType(uri)
+
+          if (mimeType?.startsWith("audio/") == true) {
+            val audioMetadata = getAudioMetadata(context, uri)
+
+            uploadViewModel.onTrackTitleChange(audioMetadata.trackTitle)
+            uploadViewModel.onArtistNameChange(audioMetadata.artistName)
+
+            uploadViewModel.setUploadProcessingState(UploadSuccess)
+          } else {
+            uploadViewModel.setUploadProcessingState(UploadIncorrectMimeType)
+          }
+        } ?: uploadViewModel.setUploadProcessingState(UploadError)
+      }
+
       AppNavigation(
         windowSizeClass = windowSizeClass,
         navigationState = navigationState,
@@ -85,6 +117,9 @@ fun MusicPlayerApp(
         onTrackTitleTextFieldChange = uploadViewModel::onTrackTitleChange,
         onArtistNameTextFieldChange = uploadViewModel::onArtistNameChange,
         onLyricsTextFieldChange = uploadViewModel::onLyricsChange,
+        uploadAudioButtonOnClick = {
+          audioPickerLauncher.launch(input = MIME_TYPE_AUDIO)
+        },
         modifier = Modifier.padding(innerPadding)
       )
     }
