@@ -34,7 +34,7 @@ fun AppNavigation(
       onNavigateBack = onNavigateBack,
       modifier = modifier
         .fillMaxSize()
-        .padding(end = 16.dp, bottom = 16.dp, start = 16.dp)
+        .padding(end = 16.dp, start = 16.dp)
     )
 
     UploadTab -> UploadScreen(
@@ -49,7 +49,7 @@ fun AppNavigation(
       onCancelButtonClick = onCancelButtonClick,
       modifier = modifier
         .fillMaxSize()
-        .padding(end = 16.dp, bottom = 16.dp, start = 16.dp)
+        .padding(end = 16.dp, start = 16.dp)
     )
   }
 }
