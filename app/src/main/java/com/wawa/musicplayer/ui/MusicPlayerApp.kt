@@ -35,7 +35,6 @@ import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
 import com.wawa.musicplayer.ui.screen.upload.UploadError
 import com.wawa.musicplayer.ui.screen.upload.UploadIncorrectMimeType
 import com.wawa.musicplayer.ui.screen.upload.UploadLoading
-import com.wawa.musicplayer.ui.screen.upload.UploadSuccess
 import com.wawa.musicplayer.ui.screen.upload.UploadViewModel
 
 @Composable
@@ -92,11 +91,7 @@ fun MusicPlayerApp(
             val audioMetadata = getAudioMetadata(context, uri)
 
             audioMetadata?.let { audioMetadata ->
-              uploadViewModel.onTrackTitleChange(audioMetadata.trackTitle)
-              uploadViewModel.onArtistNameChange(audioMetadata.artistName)
-              uploadViewModel.setBitmap(audioMetadata.bitmap)
-
-              uploadViewModel.setUploadProcessingState(UploadSuccess)
+              uploadViewModel.updateUploadForm(audioMetadata, uri)
             } ?: {
               uploadViewModel.setUploadProcessingState(UploadError)
             }
