@@ -516,7 +516,8 @@ fun UploadForm(
       ) {
         Button(
           onClick = onSaveButtonClick,
-          modifier = Modifier.weight(1f)
+          modifier = Modifier.weight(1f),
+          enabled = isTrackTitleTextFieldStateValid && isArtistNameTextFieldStateValid
         ) {
           Text(text = stringResource(R.string.save_button_text))
         }
@@ -534,7 +535,8 @@ fun UploadForm(
       ) {
         Button(
           onClick = onSaveButtonClick,
-          modifier = Modifier.fillMaxWidth(widthFraction)
+          modifier = Modifier.fillMaxWidth(widthFraction),
+          enabled = isTrackTitleTextFieldStateValid && isArtistNameTextFieldStateValid
         ) {
           Text(text = stringResource(R.string.save_button_text))
         }
