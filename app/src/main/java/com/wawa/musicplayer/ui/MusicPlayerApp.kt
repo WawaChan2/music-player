@@ -27,7 +27,7 @@ import com.wawa.musicplayer.MIME_TYPE_AUDIO
 import com.wawa.musicplayer.MIME_TYPE_IMAGE
 import com.wawa.musicplayer.R
 import com.wawa.musicplayer.data.getAudioMetadata
-import com.wawa.musicplayer.data.getImageBitmap
+import com.wawa.musicplayer.data.getBitmap
 import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
 import com.wawa.musicplayer.ui.screen.navigation.Player
@@ -108,7 +108,7 @@ fun MusicPlayerApp(
           val mimeType = context.contentResolver.getType(uri)
 
           if (mimeType?.startsWith("image/") == true) {
-            val bitmap = getImageBitmap(context, uri)
+            val bitmap = getBitmap(context, uri)
 
             uploadViewModel.setBitmap(bitmap)
           } else {

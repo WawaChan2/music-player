@@ -33,7 +33,7 @@ fun getAudioMetadata(context: Context, uri: Uri): AudioMetadata? {
   }
 }
 
-fun getImageBitmap(context: Context, uri: Uri): Bitmap? {
+fun getBitmap(context: Context, uri: Uri): Bitmap? {
   return try {
     val inputStream = context.contentResolver.openInputStream(uri)
     val bitmap = BitmapFactory.decodeStream(inputStream)
