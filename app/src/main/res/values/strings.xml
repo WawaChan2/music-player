@@ -5,6 +5,8 @@
     <string name="upload_nav">Upload</string>
 
     <string name="upload_audio_button_text">Upload audio</string>
+    <string name="save_button_text">Save</string>
+    <string name="cancel_button_text">Cancel</string>
 
     <string name="track_title_text_field">Track title</string>
     <string name="artist_name_text_field">Artist name</string>

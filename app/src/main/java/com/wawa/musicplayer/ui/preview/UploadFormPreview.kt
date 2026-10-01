@@ -14,7 +14,10 @@ fun UploadFormPreview() {
       uploadState = UploadState(),
       onTrackTitleTextFieldChange = {},
       onArtistNameTextFieldChange = {},
-      onLyricsTextFieldChange = {}
+      onLyricsTextFieldChange = {},
+      onEditIconClick = {},
+      onSaveButtonClick = {},
+      onCancelButtonClick = {}
     )
   }
 }

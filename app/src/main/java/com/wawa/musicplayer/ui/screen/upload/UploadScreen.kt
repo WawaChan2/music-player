@@ -1,5 +1,9 @@
 package com.wawa.musicplayer.ui.screen.upload
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,13 +12,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -46,44 +53,65 @@ fun UploadScreen(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
-  uploadAudioButtonOnClick: () -> Unit,
+  onEditIconClick: () -> Unit,
+  onUploadAudioButtonClick: () -> Unit,
+  onSaveButtonClick: () -> Unit,
+  onCancelButtonClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  val scrollState = rememberScrollState()
+
   when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> CompactUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
-      modifier = modifier
+      onEditIconClick = onEditIconClick,
+      onUploadAudioButtonClick = onUploadAudioButtonClick,
+      onSaveButtonClick = onSaveButtonClick,
+      onCancelButtonClick = onCancelButtonClick,
+      modifier = modifier,
+      scrollState = scrollState
     )
 
     WindowWidthSizeClass.Medium -> MediumUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
-      modifier = modifier
+      onEditIconClick = onEditIconClick,
+      onUploadAudioButtonClick = onUploadAudioButtonClick,
+      onSaveButtonClick = onSaveButtonClick,
+      onCancelButtonClick = onCancelButtonClick,
+      modifier = modifier,
+      scrollState = scrollState
     )
 
     WindowWidthSizeClass.Expanded -> ExpandedUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
-      modifier = modifier
+      onEditIconClick = onEditIconClick,
+      onUploadAudioButtonClick = onUploadAudioButtonClick,
+      onSaveButtonClick = onSaveButtonClick,
+      onCancelButtonClick = onCancelButtonClick,
+      modifier = modifier,
+      scrollState = scrollState
     )
 
     else -> CompactUploadScreen(
       uploadState = uploadState,
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
-      modifier = modifier
+      onEditIconClick = onEditIconClick,
+      onUploadAudioButtonClick = onUploadAudioButtonClick,
+      onSaveButtonClick = onSaveButtonClick,
+      onCancelButtonClick = onCancelButtonClick,
+      modifier = modifier,
+      scrollState = scrollState
     )
   }
 }
@@ -94,16 +122,22 @@ fun CompactUploadScreen(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
-  uploadAudioButtonOnClick: () -> Unit,
-  modifier: Modifier = Modifier
+  onEditIconClick: () -> Unit,
+  onUploadAudioButtonClick: () -> Unit,
+  onSaveButtonClick: () -> Unit,
+  onCancelButtonClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  scrollState: ScrollState = rememberScrollState()
 ) {
   Column(
-    modifier = modifier,
+    modifier = modifier
+      .verticalScroll(scrollState)
+      .padding(8.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     UploadAudioBox(
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick
+      onUploadAudioButtonClick = onUploadAudioButtonClick
     )
     BottomContent(
       uploadProcessingState = uploadState.uploadProcessingState,
@@ -115,7 +149,10 @@ fun CompactUploadScreen(
           uploadState = uploadState,
           onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
           onArtistNameTextFieldChange = onArtistNameTextFieldChange,
-          onLyricsTextFieldChange = onLyricsTextFieldChange
+          onLyricsTextFieldChange = onLyricsTextFieldChange,
+          onEditIconClick = onEditIconClick,
+          onSaveButtonClick = onSaveButtonClick,
+          onCancelButtonClick = onCancelButtonClick,
         )
       },
       incorrectMimeType = {
@@ -136,16 +173,22 @@ fun MediumUploadScreen(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
-  uploadAudioButtonOnClick: () -> Unit,
-  modifier: Modifier = Modifier
+  onEditIconClick: () -> Unit,
+  onUploadAudioButtonClick: () -> Unit,
+  onSaveButtonClick: () -> Unit,
+  onCancelButtonClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  scrollState: ScrollState = rememberScrollState()
 ) {
   Column(
-    modifier = modifier,
+    modifier = modifier
+      .verticalScroll(scrollState)
+      .padding(8.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     UploadAudioBox(
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
+      onUploadAudioButtonClick = onUploadAudioButtonClick,
       widthFraction = .5f,
       uploadIconSize = 84.dp,
       padding = 16.dp
@@ -163,7 +206,14 @@ fun MediumUploadScreen(
           uploadState = uploadState,
           onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
           onArtistNameTextFieldChange = onArtistNameTextFieldChange,
-          onLyricsTextFieldChange = onLyricsTextFieldChange
+          onLyricsTextFieldChange = onLyricsTextFieldChange,
+          onEditIconClick = onEditIconClick,
+          onSaveButtonClick = onSaveButtonClick,
+          onCancelButtonClick = onCancelButtonClick,
+          coverArtSize = 192.dp,
+          borderWidth = 8.dp,
+          editIconSize = 36.dp,
+          iconOuterPadding = 4.dp
         )
       },
       incorrectMimeType = {
@@ -184,16 +234,22 @@ fun ExpandedUploadScreen(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
-  uploadAudioButtonOnClick: () -> Unit,
-  modifier: Modifier = Modifier
+  onEditIconClick: () -> Unit,
+  onUploadAudioButtonClick: () -> Unit,
+  onSaveButtonClick: () -> Unit,
+  onCancelButtonClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  scrollState: ScrollState = rememberScrollState()
 ) {
   Column(
-    modifier = modifier,
+    modifier = modifier
+      .verticalScroll(scrollState)
+      .padding(8.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     UploadAudioBox(
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
+      onUploadAudioButtonClick = onUploadAudioButtonClick,
       widthFraction = .4f,
       uploadIconSize = 84.dp,
       padding = 20.dp
@@ -212,8 +268,16 @@ fun ExpandedUploadScreen(
           onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
           onArtistNameTextFieldChange = onArtistNameTextFieldChange,
           onLyricsTextFieldChange = onLyricsTextFieldChange,
+          onEditIconClick = onEditIconClick,
+          onSaveButtonClick = onSaveButtonClick,
+          onCancelButtonClick = onCancelButtonClick,
           isVariant = true,
-          textFieldWidthFraction = .95f
+          widthFraction = .95f,
+          coverArtSize = 256.dp,
+          borderWidth = 10.dp,
+          editIconSize = 44.dp,
+          iconOuterPadding = 8.dp,
+          lyricsLineHeight = 5
         )
       },
       incorrectMimeType = {
@@ -230,7 +294,7 @@ fun ExpandedUploadScreen(
 
 @Composable
 fun UploadAudioBox(
-  uploadAudioButtonOnClick: () -> Unit,
+  onUploadAudioButtonClick: () -> Unit,
   modifier: Modifier = Modifier,
   widthFraction: Float = .8f,
   uploadIconSize: Dp = 72.dp,
@@ -260,7 +324,7 @@ fun UploadAudioBox(
       tint = MaterialTheme.colorScheme.primary
     )
     Button(
-      onClick = uploadAudioButtonOnClick,
+      onClick = onUploadAudioButtonClick,
       elevation = ButtonDefaults.buttonElevation(
         defaultElevation = 8.dp
       )
@@ -315,11 +379,19 @@ fun UploadForm(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
+  onEditIconClick: () -> Unit,
+  onSaveButtonClick: () -> Unit,
+  onCancelButtonClick: () -> Unit,
   modifier: Modifier = Modifier,
   isVariant: Boolean = false,
   coverArtSize: Dp = 160.dp,
+  borderWidth: Dp = 6.dp,
+  editIconSize: Dp = 28.dp,
+  iconInnerPadding: Dp = 6.dp,
+  iconOuterPadding: Dp = 2.dp,
   verticalSpacing: Dp = 4.dp,
-  textFieldWidthFraction: Float = .9f
+  widthFraction: Float = .9f,
+  lyricsLineHeight: Int = 3
 ) {
   Column(
     modifier = modifier,
@@ -329,23 +401,42 @@ fun UploadForm(
     val isTrackTitleTextFieldStateValid = uploadState.trackTitle.isNotBlank()
     val isArtistNameTextFieldStateValid = uploadState.artistName.isNotBlank()
 
-    AsyncImage(
-      model = ImageRequest.Builder(LocalContext.current)
-        .data(uploadState.bitmap)
-        .crossfade(true)
-        .build(),
-      contentDescription = null,
-      modifier = Modifier
-        .padding(16.dp)
-        .size(coverArtSize)
-        .clip(CircleShape),
-      error = painterResource(R.drawable.image_placeholder),
-      contentScale = ContentScale.Crop
-    )
+    Box(modifier = Modifier.padding(16.dp)) {
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(uploadState.bitmap)
+          .crossfade(true)
+          .build(),
+        contentDescription = null,
+        modifier = Modifier
+          .size(coverArtSize)
+          .border(
+            width = borderWidth,
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = CircleShape
+          )
+          .clip(CircleShape),
+        error = painterResource(R.drawable.image_placeholder),
+        contentScale = ContentScale.Crop
+      )
+      Icon(
+        imageVector = ImageVector.vectorResource(R.drawable.edit_24px),
+        contentDescription = null,
+        modifier = Modifier
+          .padding(iconOuterPadding)
+          .clip(CircleShape)
+          .background(MaterialTheme.colorScheme.secondaryContainer)
+          .padding(iconInnerPadding)
+          .size(editIconSize)
+          .align(Alignment.BottomEnd)
+          .clickable(onClick = onEditIconClick),
+        tint = MaterialTheme.colorScheme.onSecondaryContainer
+      )
+    }
 
     if (isVariant) {
       Row(
-        modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
+        modifier = Modifier.fillMaxWidth(widthFraction),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
       ) {
         TextField(
@@ -379,7 +470,7 @@ fun UploadForm(
       TextField(
         value = uploadState.trackTitle,
         onValueChange = onTrackTitleTextFieldChange,
-        modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
+        modifier = Modifier.fillMaxWidth(widthFraction),
         label = { Text(text = stringResource(R.string.track_title_text_field)) },
         supportingText = {
           if (!isTrackTitleTextFieldStateValid) {
@@ -392,7 +483,7 @@ fun UploadForm(
       TextField(
         value = uploadState.artistName,
         onValueChange = onArtistNameTextFieldChange,
-        modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
+        modifier = Modifier.fillMaxWidth(widthFraction),
         label = { Text(text = stringResource(R.string.artist_name_text_field)) },
         supportingText = {
           if (!isArtistNameTextFieldStateValid) {
@@ -407,9 +498,51 @@ fun UploadForm(
     OutlinedTextField(
       value = uploadState.lyrics,
       onValueChange = onLyricsTextFieldChange,
-      modifier = Modifier.fillMaxWidth(textFieldWidthFraction),
-      label = { Text(text = stringResource(R.string.lyrics_text_field)) }
+      modifier = Modifier.fillMaxWidth(widthFraction),
+      label = { Text(text = stringResource(R.string.lyrics_text_field)) },
+      minLines = lyricsLineHeight,
+      maxLines = lyricsLineHeight
     )
+
+    if (isVariant) {
+      Row(
+        modifier = modifier
+          .padding(top = 24.dp)
+          .fillMaxWidth(widthFraction),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+      ) {
+        Button(
+          onClick = onSaveButtonClick,
+          modifier = Modifier.weight(1f)
+        ) {
+          Text(text = stringResource(R.string.save_button_text))
+        }
+        OutlinedButton(
+          onClick = onCancelButtonClick,
+          modifier = Modifier.weight(1f)
+        ) {
+          Text(text = stringResource(R.string.cancel_button_text))
+        }
+      }
+    } else {
+      Column(
+        modifier = Modifier.padding(top = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+      ) {
+        Button(
+          onClick = onSaveButtonClick,
+          modifier = Modifier.fillMaxWidth(widthFraction)
+        ) {
+          Text(text = stringResource(R.string.save_button_text))
+        }
+        OutlinedButton(
+          onClick = onCancelButtonClick,
+          modifier = Modifier.fillMaxWidth(widthFraction)
+        ) {
+          Text(text = stringResource(R.string.cancel_button_text))
+        }
+      }
+    }
   }
 }
 

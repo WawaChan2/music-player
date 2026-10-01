@@ -10,7 +10,7 @@ import com.wawa.musicplayer.ui.theme.MusicPlayerTheme
 fun UploadAudioBoxPreview() {
   MusicPlayerTheme {
     UploadAudioBox(
-      uploadAudioButtonOnClick = {}
+      onUploadAudioButtonClick = {}
     )
   }
 }

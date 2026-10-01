@@ -1,4 +1,4 @@
-package com.wawa.musicplayer.media
+package com.wawa.musicplayer.data
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -30,5 +30,17 @@ fun getAudioMetadata(context: Context, uri: Uri): AudioMetadata? {
     null
   } finally {
     retriever.release()
+  }
+}
+
+fun getImageBitmap(context: Context, uri: Uri): Bitmap? {
+  return try {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val bitmap = BitmapFactory.decodeStream(inputStream)
+
+    inputStream?.close()
+    bitmap
+  } catch (_: Exception) {
+    null
   }
 }

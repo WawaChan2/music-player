@@ -24,8 +24,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wawa.musicplayer.MIME_TYPE_AUDIO
+import com.wawa.musicplayer.MIME_TYPE_IMAGE
 import com.wawa.musicplayer.R
-import com.wawa.musicplayer.media.getAudioMetadata
+import com.wawa.musicplayer.data.getAudioMetadata
+import com.wawa.musicplayer.data.getImageBitmap
 import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
 import com.wawa.musicplayer.ui.screen.navigation.Player
@@ -81,7 +83,7 @@ fun MusicPlayerApp(
       val audioPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
       ) { uri ->
-        uri?.let {
+        uri?.let { uri ->
           uploadViewModel.setUploadProcessingState(UploadLoading)
 
           val mimeType = context.contentResolver.getType(uri)
@@ -104,6 +106,22 @@ fun MusicPlayerApp(
         }
       }
 
+      val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+      ) { uri ->
+        uri?.let { uri ->
+          val mimeType = context.contentResolver.getType(uri)
+
+          if (mimeType?.startsWith("image/") == true) {
+            val bitmap = getImageBitmap(context, uri)
+
+            uploadViewModel.setBitmap(bitmap)
+          } else {
+            uploadViewModel.setBitmap(null)
+          }
+        }
+      }
+
       AppNavigation(
         windowSizeClass = windowSizeClass,
         navigationState = navigationState,
@@ -122,9 +140,14 @@ fun MusicPlayerApp(
         onTrackTitleTextFieldChange = uploadViewModel::onTrackTitleChange,
         onArtistNameTextFieldChange = uploadViewModel::onArtistNameChange,
         onLyricsTextFieldChange = uploadViewModel::onLyricsChange,
-        uploadAudioButtonOnClick = {
+        onEditIconClick = {
+          imagePickerLauncher.launch(input = MIME_TYPE_IMAGE)
+        },
+        onUploadAudioButtonClick = {
           audioPickerLauncher.launch(input = MIME_TYPE_AUDIO)
         },
+        onSaveButtonClick = {},
+        onCancelButtonClick = { uploadViewModel.setUploadProcessingState(null) },
         modifier = Modifier.padding(innerPadding)
       )
     }

@@ -20,7 +20,10 @@ fun AppNavigation(
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
-  uploadAudioButtonOnClick: () -> Unit,
+  onEditIconClick: () -> Unit,
+  onUploadAudioButtonClick: () -> Unit,
+  onSaveButtonClick: () -> Unit,
+  onCancelButtonClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (navigationState.selectedTab) {
@@ -31,7 +34,7 @@ fun AppNavigation(
       onNavigateBack = onNavigateBack,
       modifier = modifier
         .fillMaxSize()
-        .padding(top = 8.dp, end = 16.dp, bottom = 16.dp, start = 16.dp)
+        .padding(end = 16.dp, bottom = 16.dp, start = 16.dp)
     )
 
     UploadTab -> UploadScreen(
@@ -40,10 +43,13 @@ fun AppNavigation(
       onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
       onArtistNameTextFieldChange = onArtistNameTextFieldChange,
       onLyricsTextFieldChange = onLyricsTextFieldChange,
-      uploadAudioButtonOnClick = uploadAudioButtonOnClick,
+      onEditIconClick = onEditIconClick,
+      onUploadAudioButtonClick = onUploadAudioButtonClick,
+      onSaveButtonClick = onSaveButtonClick,
+      onCancelButtonClick = onCancelButtonClick,
       modifier = modifier
         .fillMaxSize()
-        .padding(top = 8.dp, end = 16.dp, bottom = 16.dp, start = 16.dp)
+        .padding(end = 16.dp, bottom = 16.dp, start = 16.dp)
     )
   }
 }
