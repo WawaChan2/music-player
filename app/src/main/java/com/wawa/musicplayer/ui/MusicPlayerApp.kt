@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wawa.musicplayer.MIME_TYPE_AUDIO
 import com.wawa.musicplayer.MIME_TYPE_IMAGE
 import com.wawa.musicplayer.R
@@ -41,7 +40,7 @@ import com.wawa.musicplayer.ui.screen.upload.UploadViewModel
 fun MusicPlayerApp(
   windowSizeClass: WindowSizeClass,
   navigationViewModel: NavigationViewModel = hiltViewModel(),
-  uploadViewModel: UploadViewModel = viewModel()
+  uploadViewModel: UploadViewModel = hiltViewModel()
 ) {
   val navigationState by navigationViewModel.navigationState.collectAsStateWithLifecycle()
   val uploadState by uploadViewModel.uploadState.collectAsStateWithLifecycle()
@@ -141,7 +140,7 @@ fun MusicPlayerApp(
         onUploadAudioButtonClick = {
           audioPickerLauncher.launch(input = MIME_TYPE_AUDIO)
         },
-        onSaveButtonClick = {},
+        onSaveButtonClick = uploadViewModel::saveTrack,
         onCancelButtonClick = { uploadViewModel.setUploadProcessingState(null) },
         modifier = Modifier.padding(innerPadding)
       )

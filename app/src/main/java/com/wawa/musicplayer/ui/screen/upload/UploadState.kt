@@ -6,19 +6,21 @@ import com.wawa.musicplayer.data.Track
 
 data class UploadState(
   val uploadProcessingState: UploadProcessingState? = null,
+  val saveState: SaveState? = null,
   val trackTitle: String = "",
   val artistName: String = "",
   val lyrics: String = "",
   val bitmap: Bitmap? = null,
-  val audioUri: Uri? = null
+  val audioUri: Uri? = null,
+  val audioFileExtension: String? = null
 )
 
-fun UploadState.convertToTrack(): Track {
+fun UploadState.convertToTrack(imageFilePath: String?, audioFilePath: String): Track {
   return Track(
     trackTitle = trackTitle,
     artistName = artistName,
     lyrics = lyrics.ifBlank { null },
-    imageFilePath = null,
-    audioFilePath = ""
+    imageFilePath = imageFilePath,
+    audioFilePath = audioFilePath
   )
 }

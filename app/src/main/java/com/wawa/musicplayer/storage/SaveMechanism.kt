@@ -7,36 +7,46 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
+data class SavedFiles(
+  val audioFile: File,
+  val imageFile: File? = null
+)
+
 fun saveFiles(
   context: Context,
-  bitmap: Bitmap,
+  bitmap: Bitmap?,
   audioUri: Uri,
-  imageFileName: String,
+  imageFileName: String?,
   audioFileName: String
-): List<File> {
-  val imageFile = File(context.filesDir, imageFileName)
+): SavedFiles {
   val audioFile = File(context.filesDir, audioFileName)
+  var imageFile: File? = null
 
   try {
-    saveBitmap(context, bitmap, imageFileName)
-    saveAudio(context, audioUri, audioFileName)
+    saveAudio(context, audioUri, audioFile)
 
-    return listOf(imageFile, audioFile)
+    if (bitmap != null && imageFileName != null) {
+      imageFile = File(context.filesDir, imageFileName)
+
+      saveBitmap(bitmap, imageFile)
+    }
+
+    return SavedFiles(
+      audioFile,
+      imageFile
+    )
   } catch (e: IOException) {
-    imageFile.delete()
     audioFile.delete()
+    imageFile?.delete()
 
     throw e
   }
 }
 
 private fun saveBitmap(
-  context: Context,
   bitmap: Bitmap,
-  fileName: String
-): File {
-  val file = File(context.filesDir, fileName)
-
+  file: File
+) {
   FileOutputStream(file).use { outputStream ->
     if (!bitmap.compress(
         Bitmap.CompressFormat.JPEG,
@@ -47,17 +57,13 @@ private fun saveBitmap(
       throw IOException("Failed to compress bitmap")
     }
   }
-
-  return file
 }
 
 private fun saveAudio(
   context: Context,
   uri: Uri,
-  fileName: String
-): File {
-  val file = File(context.filesDir, fileName)
-
+  file: File
+) {
   val inputStream = context.contentResolver.openInputStream(uri)
     ?: throw IOException("Could not open audio URI")
 
@@ -66,6 +72,4 @@ private fun saveAudio(
       input.copyTo(output)
     }
   }
-
-  return file
 }

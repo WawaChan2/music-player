@@ -1,6 +1,7 @@
 package com.wawa.musicplayer.data
 
 import android.content.Context
+import androidx.room3.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +18,11 @@ object DatabaseModule {
   fun provideDatabase(
     @ApplicationContext context: Context
   ): MusicPlayerDatabase {
-    return MusicPlayerDatabase.getDatabase(context)
+    return Room.databaseBuilder(
+      context,
+      MusicPlayerDatabase::class.java,
+      "music_player_database"
+    ).build()
   }
 
   @Provides

@@ -22,12 +22,6 @@ class PlaylistViewModel @Inject constructor(private val playlistRepository: Play
       initialValue = PlaylistUiState()
     )
 
-  fun insertTrack(track: Track) {
-    viewModelScope.launch {
-      playlistRepository.insertTrack(track)
-    }
-  }
-
   fun updateTrack(track: Track) {
     viewModelScope.launch {
       playlistRepository.updateTrack(track)
