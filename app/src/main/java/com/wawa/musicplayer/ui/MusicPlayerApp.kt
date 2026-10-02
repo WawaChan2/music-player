@@ -146,6 +146,10 @@ fun MusicPlayerApp(
         },
         onSaveButtonClick = uploadViewModel::saveTrack,
         onCancelButtonClick = { uploadViewModel.setUploadProcessingState(null) },
+        onDialogClose = {
+          uploadViewModel.setUploadProcessingState(null)
+          uploadViewModel.setSaveState(null)
+        },
         modifier = Modifier.padding(innerPadding)
       )
     }

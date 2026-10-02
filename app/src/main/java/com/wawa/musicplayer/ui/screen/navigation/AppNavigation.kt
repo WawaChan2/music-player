@@ -26,6 +26,7 @@ fun AppNavigation(
   onUploadAudioButtonClick: () -> Unit,
   onSaveButtonClick: () -> Unit,
   onCancelButtonClick: () -> Unit,
+  onDialogClose: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (navigationState.selectedTab) {
@@ -50,6 +51,7 @@ fun AppNavigation(
       onUploadAudioButtonClick = onUploadAudioButtonClick,
       onSaveButtonClick = onSaveButtonClick,
       onCancelButtonClick = onCancelButtonClick,
+      onDialogClose = onDialogClose,
       modifier = modifier
         .fillMaxSize()
         .padding(end = 16.dp, start = 16.dp)

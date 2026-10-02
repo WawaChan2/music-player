@@ -7,6 +7,15 @@
     <string name="upload_audio_button_text">Upload audio</string>
     <string name="save_button_text">Save</string>
     <string name="cancel_button_text">Cancel</string>
+    <string name="confirm_button_text">Confirm</string>
+    <string name="dismiss_button_text">Dismiss</string>
+
+    <string name="loading_dialog_title">Loading</string>
+    <string name="loading_dialog_text">Please wait, this might take a while…</string>
+    <string name="success_dialog_title">Success</string>
+    <string name="success_dialog_text">Soundtrack added successfully!</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_text">Something went wrong, please try again.</string>
 
     <string name="track_title_text_field">Track title</string>
     <string name="artist_name_text_field">Artist name</string>

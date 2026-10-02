@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -59,6 +61,7 @@ fun UploadScreen(
   onUploadAudioButtonClick: () -> Unit,
   onSaveButtonClick: () -> Unit,
   onCancelButtonClick: () -> Unit,
+  onDialogClose: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   val scrollState = rememberScrollState()
@@ -73,6 +76,7 @@ fun UploadScreen(
       onUploadAudioButtonClick = onUploadAudioButtonClick,
       onSaveButtonClick = onSaveButtonClick,
       onCancelButtonClick = onCancelButtonClick,
+      onDialogClose = onDialogClose,
       modifier = modifier,
       scrollState = scrollState
     )
@@ -86,6 +90,7 @@ fun UploadScreen(
       onUploadAudioButtonClick = onUploadAudioButtonClick,
       onSaveButtonClick = onSaveButtonClick,
       onCancelButtonClick = onCancelButtonClick,
+      onDialogClose = onDialogClose,
       modifier = modifier,
       scrollState = scrollState
     )
@@ -99,6 +104,7 @@ fun UploadScreen(
       onUploadAudioButtonClick = onUploadAudioButtonClick,
       onSaveButtonClick = onSaveButtonClick,
       onCancelButtonClick = onCancelButtonClick,
+      onDialogClose = onDialogClose,
       modifier = modifier,
       scrollState = scrollState
     )
@@ -112,6 +118,7 @@ fun UploadScreen(
       onUploadAudioButtonClick = onUploadAudioButtonClick,
       onSaveButtonClick = onSaveButtonClick,
       onCancelButtonClick = onCancelButtonClick,
+      onDialogClose = onDialogClose,
       modifier = modifier,
       scrollState = scrollState
     )
@@ -128,6 +135,7 @@ fun CompactUploadScreen(
   onUploadAudioButtonClick: () -> Unit,
   onSaveButtonClick: () -> Unit,
   onCancelButtonClick: () -> Unit,
+  onDialogClose: () -> Unit,
   modifier: Modifier = Modifier,
   scrollState: ScrollState = rememberScrollState()
 ) {
@@ -167,6 +175,10 @@ fun CompactUploadScreen(
     ) {
 
     }
+    AlertDialogs(
+      uploadState = uploadState,
+      onClose = onDialogClose
+    )
   }
 }
 
@@ -180,6 +192,7 @@ fun MediumUploadScreen(
   onUploadAudioButtonClick: () -> Unit,
   onSaveButtonClick: () -> Unit,
   onCancelButtonClick: () -> Unit,
+  onDialogClose: () -> Unit,
   modifier: Modifier = Modifier,
   scrollState: ScrollState = rememberScrollState()
 ) {
@@ -228,6 +241,12 @@ fun MediumUploadScreen(
     ) {
 
     }
+    AlertDialogs(
+      uploadState = uploadState,
+      onClose = onDialogClose,
+      iconSize = 72.dp,
+      strokeWidth = 7.dp
+    )
   }
 }
 
@@ -241,6 +260,7 @@ fun ExpandedUploadScreen(
   onUploadAudioButtonClick: () -> Unit,
   onSaveButtonClick: () -> Unit,
   onCancelButtonClick: () -> Unit,
+  onDialogClose: () -> Unit,
   modifier: Modifier = Modifier,
   scrollState: ScrollState = rememberScrollState()
 ) {
@@ -292,6 +312,12 @@ fun ExpandedUploadScreen(
     ) {
 
     }
+    AlertDialogs(
+      uploadState = uploadState,
+      onClose = onDialogClose,
+      iconSize = 72.dp,
+      strokeWidth = 7.dp
+    )
   }
 }
 
@@ -556,7 +582,7 @@ fun ErrorWarning(
   modifier: Modifier = Modifier,
   iconSize: Dp = 64.dp
 ) {
-  WarningLayout(
+  BaseWarning(
     title = stringResource(R.string.error_warning_title),
     subtitle = stringResource(R.string.error_warning_subtitle),
     icon = ImageVector.vectorResource(R.drawable.error_24px),
@@ -570,7 +596,7 @@ fun IncorrectMimeTypeWarning(
   modifier: Modifier = Modifier,
   iconSize: Dp = 64.dp
 ) {
-  WarningLayout(
+  BaseWarning(
     title = stringResource(R.string.incorrect_mime_type_warning_title),
     subtitle = stringResource(R.string.incorrect_mime_type_warning_subtitle),
     icon = ImageVector.vectorResource(R.drawable.warning_24px),
@@ -580,7 +606,7 @@ fun IncorrectMimeTypeWarning(
 }
 
 @Composable
-fun WarningLayout(
+fun BaseWarning(
   title: String,
   subtitle: String,
   icon: ImageVector,
@@ -610,4 +636,129 @@ fun WarningLayout(
       textAlign = TextAlign.Center
     )
   }
+}
+
+@Composable
+fun AlertDialogs(
+  uploadState: UploadState,
+  onClose: () -> Unit,
+  modifier: Modifier = Modifier,
+  iconSize: Dp = 64.dp,
+  strokeWidth: Dp = 6.dp
+) {
+  when (uploadState.saveState) {
+    SaveLoading -> LoadingAlertDialog(
+      modifier = modifier,
+      spinnerSize = iconSize,
+      strokeWidth = strokeWidth
+    )
+    SaveError -> ErrorAlertDialog(
+      onClose = onClose,
+      modifier = modifier,
+      iconSize = iconSize
+    )
+    SaveSuccess -> SuccessAlertDialog(
+      onClose = onClose,
+      modifier = modifier,
+      iconSize = iconSize
+    )
+    else -> Unit
+  }
+}
+
+@Composable
+fun SuccessAlertDialog(
+  onClose: () -> Unit,
+  modifier: Modifier = Modifier,
+  iconSize: Dp = 64.dp
+) {
+  BaseAlertDialog(
+    icon = {
+      Icon(
+        imageVector = ImageVector.vectorResource(R.drawable.check_circle_24px),
+        contentDescription = null,
+        modifier = Modifier.size(iconSize)
+      )
+    },
+    title = stringResource(R.string.success_dialog_title),
+    text = stringResource(R.string.success_dialog_text),
+    onClose = onClose,
+    modifier = modifier
+  )
+}
+
+@Composable
+fun ErrorAlertDialog(
+  onClose: () -> Unit,
+  modifier: Modifier = Modifier,
+  iconSize: Dp = 64.dp
+) {
+  BaseAlertDialog(
+    icon = {
+      Icon(
+        imageVector = ImageVector.vectorResource(R.drawable.cancel_24px),
+        contentDescription = null,
+        modifier = Modifier.size(iconSize)
+      )
+    },
+    title = stringResource(R.string.error_dialog_title),
+    text = stringResource(R.string.error_dialog_text),
+    onClose = onClose,
+    modifier = modifier
+  )
+}
+
+@Composable
+fun LoadingAlertDialog(
+  modifier: Modifier = Modifier,
+  spinnerSize: Dp = 64.dp,
+  strokeWidth: Dp = 6.dp
+) {
+  BaseAlertDialog(
+    icon = {
+      CircularProgressIndicator(
+        modifier = Modifier.size(spinnerSize),
+        strokeWidth = strokeWidth
+      )
+    },
+    title = stringResource(R.string.loading_dialog_title),
+    text = stringResource(R.string.loading_dialog_text),
+    onClose = null,
+    modifier = modifier
+  )
+}
+
+@Composable
+fun BaseAlertDialog(
+  icon: @Composable () -> Unit,
+  title: String,
+  text: String,
+  onClose: (() -> Unit)?,
+  modifier: Modifier = Modifier
+) {
+  AlertDialog(
+    icon = icon,
+    title = {
+      Text(text = title)
+    },
+    text = {
+      Text(text = text)
+    },
+    onDismissRequest = onClose ?: {},
+    confirmButton = {
+      onClose?.let {
+        TextButton(onClick = it) {
+          Text(text = stringResource(R.string.confirm_button_text))
+        }
+      }
+    },
+    dismissButton = {
+      onClose?.let {
+        TextButton(onClick = it) {
+          Text(text = stringResource(R.string.dismiss_button_text))
+        }
+      }
+    },
+    modifier = modifier
+  )
 }
