@@ -31,6 +31,7 @@ import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
 import com.wawa.musicplayer.ui.screen.navigation.Player
 import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
+import com.wawa.musicplayer.ui.screen.playlist.PlaylistViewModel
 import com.wawa.musicplayer.ui.screen.upload.UploadError
 import com.wawa.musicplayer.ui.screen.upload.UploadIncorrectMimeType
 import com.wawa.musicplayer.ui.screen.upload.UploadLoading
@@ -40,10 +41,12 @@ import com.wawa.musicplayer.ui.screen.upload.UploadViewModel
 fun MusicPlayerApp(
   windowSizeClass: WindowSizeClass,
   navigationViewModel: NavigationViewModel = hiltViewModel(),
-  uploadViewModel: UploadViewModel = hiltViewModel()
+  uploadViewModel: UploadViewModel = hiltViewModel(),
+  playlistViewModel: PlaylistViewModel = hiltViewModel()
 ) {
   val navigationState by navigationViewModel.navigationState.collectAsStateWithLifecycle()
   val uploadState by uploadViewModel.uploadState.collectAsStateWithLifecycle()
+  val playlistUiState by playlistViewModel.playlistUiState.collectAsStateWithLifecycle()
 
   NavigationSuiteScaffold(
     navigationSuiteItems = {
@@ -119,6 +122,8 @@ fun MusicPlayerApp(
       AppNavigation(
         windowSizeClass = windowSizeClass,
         navigationState = navigationState,
+        uploadState = uploadState,
+        playlistUiState = playlistUiState,
         onNavigateToPlayer = {
           navigationViewModel.navigateToScreenOnTab(
             tab = navigationState.selectedTab,
@@ -130,7 +135,6 @@ fun MusicPlayerApp(
             tab = navigationState.selectedTab
           )
         },
-        uploadState = uploadState,
         onTrackTitleTextFieldChange = uploadViewModel::onTrackTitleChange,
         onArtistNameTextFieldChange = uploadViewModel::onArtistNameChange,
         onLyricsTextFieldChange = uploadViewModel::onLyricsChange,

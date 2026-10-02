@@ -11,6 +11,7 @@ import com.wawa.musicplayer.ui.screen.navigation.Player
 fun PlaylistScreen(
   windowSizeClass: WindowSizeClass,
   navigationState: NavigationState,
+  playlistUiState: PlaylistUiState,
   onNavigateToPlayer: () -> Unit,
   onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier
@@ -26,6 +27,7 @@ fun PlaylistScreen(
   } else if (currentScreen == Picker) {
     PickerScreen(
       windowSizeClass = windowSizeClass,
+      playlistUiState = playlistUiState,
       onNavigateToPlayer = onNavigateToPlayer,
       modifier = modifier
     )
