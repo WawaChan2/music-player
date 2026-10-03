@@ -17,7 +17,8 @@ fun AppNavigation(
   navigationState: NavigationState,
   uploadState: UploadState,
   playlistUiState: PlaylistUiState,
-  onNavigateToPlayer: () -> Unit,
+  onNavigateToEditor: () -> Unit,
+  onNavigateToNowPlaying: () -> Unit,
   onNavigateBack: () -> Unit,
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
@@ -33,7 +34,8 @@ fun AppNavigation(
     PlaylistTab -> PlaylistScreen(
       windowSizeClass = windowSizeClass,
       navigationState = navigationState,
-      onNavigateToPlayer = onNavigateToPlayer,
+      onNavigateToEditor = onNavigateToEditor,
+      onNavigateToNowPlaying = onNavigateToNowPlaying,
       onNavigateBack = onNavigateBack,
       playlistUiState = playlistUiState,
       modifier = modifier

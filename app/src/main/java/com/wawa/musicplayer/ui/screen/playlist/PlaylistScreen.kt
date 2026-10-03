@@ -3,33 +3,50 @@ package com.wawa.musicplayer.ui.screen.playlist
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.wawa.musicplayer.ui.screen.navigation.Display
+import com.wawa.musicplayer.ui.screen.navigation.Editor
 import com.wawa.musicplayer.ui.screen.navigation.NavigationState
-import com.wawa.musicplayer.ui.screen.navigation.Picker
-import com.wawa.musicplayer.ui.screen.navigation.Player
+import com.wawa.musicplayer.ui.screen.navigation.NowPlaying
 
 @Composable
 fun PlaylistScreen(
   windowSizeClass: WindowSizeClass,
   navigationState: NavigationState,
   playlistUiState: PlaylistUiState,
-  onNavigateToPlayer: () -> Unit,
+  onNavigateToEditor: () -> Unit,
+  onNavigateToNowPlaying: () -> Unit,
   onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   val currentScreen = navigationState.backStackByTab[navigationState.selectedTab]!!.last()
 
-  if (currentScreen == Player) {
-    PlayerScreen(
-      windowSizeClass = windowSizeClass,
-      onNavigateBack = onNavigateBack,
-      modifier = modifier
-    )
-  } else if (currentScreen == Picker) {
-    PickerScreen(
-      windowSizeClass = windowSizeClass,
-      playlistUiState = playlistUiState,
-      onNavigateToPlayer = onNavigateToPlayer,
-      modifier = modifier
-    )
+  when (currentScreen) {
+    Display -> {
+      DisplayScreen(
+        windowSizeClass = windowSizeClass,
+        playlistUiState = playlistUiState,
+        onNavigateToEditor = onNavigateToEditor,
+        modifier = modifier
+      )
+    }
+
+    Editor -> {
+      EditorScreen(
+        windowSizeClass = windowSizeClass,
+        onNavigateToNowPlaying = onNavigateToNowPlaying,
+        onNavigateBack = onNavigateBack,
+        modifier = modifier
+      )
+    }
+
+    NowPlaying -> {
+      NowPlayingScreen(
+        windowSizeClass = windowSizeClass,
+        onNavigateBack = onNavigateBack,
+        modifier = modifier
+      )
+    }
+
+    else -> Unit
   }
 }

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class NavigationState(
   val selectedTab: Tab = PlaylistTab,
   val backStackByTab: Map<Tab, List<Screen>> = mapOf(
-    PlaylistTab to listOf(Picker),
+    PlaylistTab to listOf(Display),
     UploadTab to listOf(Upload)
   )
 )

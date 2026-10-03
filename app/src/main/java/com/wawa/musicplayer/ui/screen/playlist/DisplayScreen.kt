@@ -1,11 +1,16 @@
 package com.wawa.musicplayer.ui.screen.playlist
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -17,43 +22,59 @@ import coil3.request.crossfade
 import com.wawa.musicplayer.R
 
 @Composable
-fun PickerScreen(
+fun DisplayScreen(
   windowSizeClass: WindowSizeClass,
   playlistUiState: PlaylistUiState,
-  onNavigateToPlayer: () -> Unit,
+  onNavigateToEditor: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (windowSizeClass.widthSizeClass) {
-    WindowWidthSizeClass.Compact -> CompactPickerScreen(
+    WindowWidthSizeClass.Compact -> CompactDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToPlayer = onNavigateToPlayer,
+      onNavigateToEditor = onNavigateToEditor,
       modifier = modifier
     )
 
-    WindowWidthSizeClass.Medium -> MediumPickerScreen(
+    WindowWidthSizeClass.Medium -> MediumDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToPlayer = onNavigateToPlayer,
+      onNavigateToEditor = onNavigateToEditor,
       modifier = modifier
     )
 
-    WindowWidthSizeClass.Expanded -> ExpandedPickerScreen(
+    WindowWidthSizeClass.Expanded -> ExpandedDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToPlayer = onNavigateToPlayer,
+      onNavigateToEditor = onNavigateToEditor,
       modifier = modifier
     )
 
-    else -> CompactPickerScreen(
+    else -> CompactDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToPlayer = onNavigateToPlayer,
+      onNavigateToEditor = onNavigateToEditor,
       modifier = modifier
     )
   }
 }
 
 @Composable
-fun CompactPickerScreen(
+fun CompactDisplayScreen(
   playlistUiState: PlaylistUiState,
-  onNavigateToPlayer: () -> Unit,
+  onNavigateToEditor: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Box(
+    modifier = modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center
+  ) {
+    Button(onClick = onNavigateToEditor) {
+      Text(text = "Go to editor")
+    }
+  }
+}
+
+@Composable
+fun MediumDisplayScreen(
+  playlistUiState: PlaylistUiState,
+  onNavigateToEditor: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   TrackList(
@@ -63,21 +84,9 @@ fun CompactPickerScreen(
 }
 
 @Composable
-fun MediumPickerScreen(
+fun ExpandedDisplayScreen(
   playlistUiState: PlaylistUiState,
-  onNavigateToPlayer: () -> Unit,
-  modifier: Modifier = Modifier
-) {
-  TrackList(
-    playlistUiState = playlistUiState,
-    modifier = modifier
-  )
-}
-
-@Composable
-fun ExpandedPickerScreen(
-  playlistUiState: PlaylistUiState,
-  onNavigateToPlayer: () -> Unit,
+  onNavigateToEditor: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   TrackList(

@@ -6,10 +6,13 @@ import kotlinx.serialization.Serializable
 sealed interface Screen
 
 @Serializable
-data object Picker : Screen
+data object Display : Screen
 
 @Serializable
-data object Player : Screen
+data object Editor : Screen
+
+@Serializable
+data object NowPlaying : Screen
 
 @Serializable
 data object Upload : Screen

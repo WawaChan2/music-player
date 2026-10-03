@@ -28,8 +28,9 @@ import com.wawa.musicplayer.R
 import com.wawa.musicplayer.data.getAudioMetadata
 import com.wawa.musicplayer.data.getBitmap
 import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
+import com.wawa.musicplayer.ui.screen.navigation.Editor
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
-import com.wawa.musicplayer.ui.screen.navigation.Player
+import com.wawa.musicplayer.ui.screen.navigation.NowPlaying
 import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
 import com.wawa.musicplayer.ui.screen.playlist.PlaylistViewModel
 import com.wawa.musicplayer.ui.screen.upload.UploadError
@@ -124,10 +125,16 @@ fun MusicPlayerApp(
         navigationState = navigationState,
         uploadState = uploadState,
         playlistUiState = playlistUiState,
-        onNavigateToPlayer = {
+        onNavigateToEditor = {
           navigationViewModel.navigateToScreenOnTab(
             tab = navigationState.selectedTab,
-            to = Player
+            to = Editor
+          )
+        },
+        onNavigateToNowPlaying = {
+          navigationViewModel.navigateToScreenOnTab(
+            tab = navigationState.selectedTab,
+            to = NowPlaying
           )
         },
         onNavigateBack = {
