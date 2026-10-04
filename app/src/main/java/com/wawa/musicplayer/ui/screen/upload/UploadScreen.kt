@@ -143,7 +143,7 @@ fun CompactUploadScreen(
     modifier = modifier
       .verticalScroll(scrollState)
       .height(IntrinsicSize.Max)
-      .padding(8.dp),
+      .padding(top = 8.dp, bottom = 8.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -199,7 +199,8 @@ fun MediumUploadScreen(
   Column(
     modifier = modifier
       .verticalScroll(scrollState)
-      .padding(8.dp),
+      .height(IntrinsicSize.Max)
+      .padding(top = 8.dp, bottom = 8.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -267,7 +268,8 @@ fun ExpandedUploadScreen(
   Column(
     modifier = modifier
       .verticalScroll(scrollState)
-      .padding(8.dp),
+      .height(IntrinsicSize.Max)
+      .padding(top = 8.dp, bottom = 8.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {

@@ -38,7 +38,6 @@ fun AppNavigation(
       onItemClick = onItemClick,
       modifier = modifier
         .fillMaxSize()
-        .padding(end = 16.dp, start = 16.dp)
     )
 
     UploadTab -> UploadScreen(
@@ -54,7 +53,7 @@ fun AppNavigation(
       onDialogClose = onDialogClose,
       modifier = modifier
         .fillMaxSize()
-        .padding(end = 16.dp, start = 16.dp)
+        .padding(start = 16.dp, end = 16.dp)
     )
   }
 }

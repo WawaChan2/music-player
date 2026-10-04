@@ -1,14 +1,20 @@
 package com.wawa.musicplayer.ui.screen.playlist
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -41,12 +48,14 @@ fun DisplayScreen(
       playlistUiState = playlistUiState,
       onItemClick = onItemClick,
       modifier = modifier
+        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     )
 
     WindowWidthSizeClass.Medium -> MediumDisplayScreen(
       playlistUiState = playlistUiState,
       onItemClick = onItemClick,
       modifier = modifier
+        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     )
 
     WindowWidthSizeClass.Expanded -> ExpandedDisplayScreen(
@@ -80,7 +89,7 @@ fun CompactDisplayScreen(
     TrackDetail(
       track = playlistUiState.allTracks.find { track ->
         track.id == playlistUiState.selectedTrackId
-      },
+      }!!,
       modifier = modifier
     )
   }
@@ -92,14 +101,22 @@ fun MediumDisplayScreen(
   onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  TrackList(
-    selectedTrack = playlistUiState.allTracks.find { track ->
-      track.id == playlistUiState.selectedTrackId
-    },
-    tracks = playlistUiState.allTracks,
-    onItemClick = onItemClick,
-    modifier = modifier
-  )
+  if (playlistUiState.selectedTrackId == null) {
+    TrackList(
+      selectedTrack = null,
+      tracks = playlistUiState.allTracks,
+      onItemClick = onItemClick,
+      modifier = modifier
+    )
+  } else {
+    TrackDetail(
+      track = playlistUiState.allTracks.find { track ->
+        track.id == playlistUiState.selectedTrackId
+      }!!,
+      modifier = modifier,
+      imageSize = 180.dp
+    )
+  }
 }
 
 @Composable
@@ -108,14 +125,40 @@ fun ExpandedDisplayScreen(
   onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  TrackList(
-    selectedTrack = playlistUiState.allTracks.find { track ->
+  Row(modifier = modifier) {
+    val selectedTrack = playlistUiState.allTracks.find { track ->
       track.id == playlistUiState.selectedTrackId
-    },
-    tracks = playlistUiState.allTracks,
-    onItemClick = onItemClick,
-    modifier = modifier
-  )
+    }
+
+    Box(
+      modifier = Modifier
+        .background(MaterialTheme.colorScheme.surfaceContainerLow)
+        .weight(1f)
+        .fillMaxHeight()
+        .padding(12.dp)
+    ) {
+      TrackList(
+        selectedTrack = selectedTrack,
+        tracks = playlistUiState.allTracks,
+        onItemClick = onItemClick
+      )
+    }
+    Box(
+      modifier = Modifier
+        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+        .weight(1f)
+        .fillMaxHeight()
+        .padding(12.dp)
+    ) {
+      if (selectedTrack != null) {
+        TrackDetail(
+          track = selectedTrack,
+          modifier = Modifier.fillMaxWidth(),
+          imageSize = 180.dp
+        )
+      }
+    }
+  }
 }
 
 @Composable
@@ -201,21 +244,42 @@ fun TrackListItem(
 
 @Composable
 fun TrackDetail(
-  track: Track?,
+  track: Track,
   modifier: Modifier = Modifier,
-  imageSize: Dp = 128.dp,
+  scrollState: ScrollState = rememberScrollState(),
+  imageSize: Dp = 160.dp
 ) {
-  if (track != null) {
-    Column(modifier = modifier) {
-      AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-          .data(track.imageFilePath)
-          .crossfade(true)
-          .build(),
-        contentDescription = null,
-        modifier = Modifier.size(imageSize),
-        error = painterResource(R.drawable.image_placeholder),
-        contentScale = ContentScale.Crop
+  Column(
+    modifier = modifier.verticalScroll(scrollState),
+    verticalArrangement = Arrangement.spacedBy(12.dp),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    AsyncImage(
+      model = ImageRequest.Builder(LocalContext.current)
+        .data(track.imageFilePath)
+        .crossfade(true)
+        .build(),
+      contentDescription = null,
+      modifier = Modifier.size(imageSize),
+      error = painterResource(R.drawable.image_placeholder),
+      contentScale = ContentScale.Crop
+    )
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+      Text(
+        text = track.trackTitle,
+        style = MaterialTheme.typography.titleLarge
+      )
+      Text(
+        text = track.artistName,
+        style = MaterialTheme.typography.labelLarge
+      )
+    }
+
+    if (track.lyrics != null) {
+      Text(
+        text = track.lyrics,
+        modifier = Modifier.align(Alignment.Start),
+        style = MaterialTheme.typography.bodyLarge
       )
     }
   }
