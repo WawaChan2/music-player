@@ -1,6 +1,6 @@
 package com.wawa.musicplayer.ui.screen.playlist
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,31 +33,31 @@ import com.wawa.musicplayer.data.Track
 fun DisplayScreen(
   windowSizeClass: WindowSizeClass,
   playlistUiState: PlaylistUiState,
-  onNavigateToEditor: () -> Unit,
+  onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> CompactDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToEditor = onNavigateToEditor,
+      onItemClick = onItemClick,
       modifier = modifier
     )
 
     WindowWidthSizeClass.Medium -> MediumDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToEditor = onNavigateToEditor,
+      onItemClick = onItemClick,
       modifier = modifier
     )
 
     WindowWidthSizeClass.Expanded -> ExpandedDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToEditor = onNavigateToEditor,
+      onItemClick = onItemClick,
       modifier = modifier
     )
 
     else -> CompactDisplayScreen(
       playlistUiState = playlistUiState,
-      onNavigateToEditor = onNavigateToEditor,
+      onItemClick = onItemClick,
       modifier = modifier
     )
   }
@@ -66,23 +66,38 @@ fun DisplayScreen(
 @Composable
 fun CompactDisplayScreen(
   playlistUiState: PlaylistUiState,
-  onNavigateToEditor: () -> Unit,
+  onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  TrackList(
-    tracks = playlistUiState.allTracks,
-    modifier = modifier
-  )
+  if (playlistUiState.selectedTrackId == null) {
+    TrackList(
+      selectedTrack = null,
+      tracks = playlistUiState.allTracks,
+      onItemClick = onItemClick,
+      modifier = modifier
+    )
+  } else {
+    TrackDetail(
+      track = playlistUiState.allTracks.find { track ->
+        track.id == playlistUiState.selectedTrackId
+      },
+      modifier = modifier
+    )
+  }
 }
 
 @Composable
 fun MediumDisplayScreen(
   playlistUiState: PlaylistUiState,
-  onNavigateToEditor: () -> Unit,
+  onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   TrackList(
+    selectedTrack = playlistUiState.allTracks.find { track ->
+      track.id == playlistUiState.selectedTrackId
+    },
     tracks = playlistUiState.allTracks,
+    onItemClick = onItemClick,
     modifier = modifier
   )
 }
@@ -90,18 +105,24 @@ fun MediumDisplayScreen(
 @Composable
 fun ExpandedDisplayScreen(
   playlistUiState: PlaylistUiState,
-  onNavigateToEditor: () -> Unit,
+  onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   TrackList(
+    selectedTrack = playlistUiState.allTracks.find { track ->
+      track.id == playlistUiState.selectedTrackId
+    },
     tracks = playlistUiState.allTracks,
+    onItemClick = onItemClick,
     modifier = modifier
   )
 }
 
 @Composable
 fun TrackList(
+  selectedTrack: Track?,
   tracks: List<Track>,
+  onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier,
   imageSize: Dp = 80.dp,
   titleLines: Int = 1,
@@ -114,10 +135,14 @@ fun TrackList(
     items(tracks) { track ->
       TrackListItem(
         track = track,
+        onClick = {
+          onItemClick(track.id)
+        },
         modifier = Modifier.fillMaxWidth(),
         imageSize = imageSize,
         titleLines = titleLines,
-        subtitleLines = subtitleLines
+        subtitleLines = subtitleLines,
+        isSelected = track == selectedTrack
       )
     }
   }
@@ -126,12 +151,20 @@ fun TrackList(
 @Composable
 fun TrackListItem(
   track: Track,
+  onClick: () -> Unit,
   modifier: Modifier = Modifier,
   imageSize: Dp = 80.dp,
   titleLines: Int = 1,
-  subtitleLines: Int = 2
+  subtitleLines: Int = 2,
+  isSelected: Boolean = false
 ) {
-  Card(modifier = modifier) {
+  Card(
+    modifier = modifier.clickable(onClick = onClick),
+    colors = CardDefaults.cardColors(
+      containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+      contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+    ),
+  ) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
       AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
@@ -149,7 +182,6 @@ fun TrackListItem(
       ) {
         Text(
           text = track.trackTitle,
-          modifier = Modifier.background(Color.Red),
           overflow = TextOverflow.Ellipsis,
           minLines = titleLines,
           maxLines = titleLines,
@@ -157,7 +189,6 @@ fun TrackListItem(
         )
         Text(
           text = track.artistName,
-          modifier = Modifier.background(Color.Green),
           overflow = TextOverflow.Ellipsis,
           minLines = subtitleLines,
           maxLines = subtitleLines,
@@ -170,8 +201,22 @@ fun TrackListItem(
 
 @Composable
 fun TrackDetail(
-  track: Track,
-  modifier: Modifier = Modifier
+  track: Track?,
+  modifier: Modifier = Modifier,
+  imageSize: Dp = 128.dp,
 ) {
-
+  if (track != null) {
+    Column(modifier = modifier) {
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(track.imageFilePath)
+          .crossfade(true)
+          .build(),
+        contentDescription = null,
+        modifier = Modifier.size(imageSize),
+        error = painterResource(R.drawable.image_placeholder),
+        contentScale = ContentScale.Crop
+      )
+    }
+  }
 }

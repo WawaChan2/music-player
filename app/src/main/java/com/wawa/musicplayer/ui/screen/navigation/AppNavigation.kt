@@ -17,8 +17,6 @@ fun AppNavigation(
   navigationState: NavigationState,
   uploadState: UploadState,
   playlistUiState: PlaylistUiState,
-  onNavigateToEditor: () -> Unit,
-  onNavigateToNowPlaying: () -> Unit,
   onNavigateBack: () -> Unit,
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
@@ -28,16 +26,16 @@ fun AppNavigation(
   onSaveButtonClick: () -> Unit,
   onCancelButtonClick: () -> Unit,
   onDialogClose: () -> Unit,
+  onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (navigationState.selectedTab) {
     PlaylistTab -> PlaylistScreen(
       windowSizeClass = windowSizeClass,
       navigationState = navigationState,
-      onNavigateToEditor = onNavigateToEditor,
-      onNavigateToNowPlaying = onNavigateToNowPlaying,
-      onNavigateBack = onNavigateBack,
       playlistUiState = playlistUiState,
+      onNavigateBack = onNavigateBack,
+      onItemClick = onItemClick,
       modifier = modifier
         .fillMaxSize()
         .padding(end = 16.dp, start = 16.dp)

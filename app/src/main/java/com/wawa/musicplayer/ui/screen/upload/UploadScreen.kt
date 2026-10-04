@@ -454,11 +454,11 @@ fun UploadForm(
         modifier = Modifier
           .padding(iconOuterPadding)
           .clip(CircleShape)
+          .clickable(onClick = onEditIconClick)
           .background(MaterialTheme.colorScheme.secondaryContainer)
           .padding(iconInnerPadding)
           .size(editIconSize)
-          .align(Alignment.BottomEnd)
-          .clickable(onClick = onEditIconClick),
+          .align(Alignment.BottomEnd),
         tint = MaterialTheme.colorScheme.onSecondaryContainer
       )
     }

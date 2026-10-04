@@ -1,9 +1,8 @@
 package com.wawa.musicplayer.ui.screen.playlist
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -13,20 +12,14 @@ import androidx.compose.ui.Modifier
 @Composable
 fun EditorScreen(
   windowSizeClass: WindowSizeClass,
-  onNavigateToNowPlaying: () -> Unit,
   onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Row(
+  BackHandler { onNavigateBack() }
+  Box(
     modifier = modifier.fillMaxSize(),
-    horizontalArrangement = Arrangement.Center,
-    verticalAlignment = Alignment.CenterVertically
+    contentAlignment = Alignment.Center
   ) {
-    Button(onClick = onNavigateToNowPlaying) {
-      Text(text = "Go to now playing")
-    }
-    Button(onClick = onNavigateBack) {
-      Text(text = "Go back")
-    }
+    Text(text = "Editor")
   }
 }

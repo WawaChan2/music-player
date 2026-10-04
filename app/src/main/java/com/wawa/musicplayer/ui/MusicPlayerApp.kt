@@ -2,9 +2,12 @@ package com.wawa.musicplayer.ui
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,6 +23,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wawa.musicplayer.MIME_TYPE_AUDIO
@@ -28,9 +33,11 @@ import com.wawa.musicplayer.R
 import com.wawa.musicplayer.data.getAudioMetadata
 import com.wawa.musicplayer.data.getBitmap
 import com.wawa.musicplayer.ui.screen.navigation.AppNavigation
+import com.wawa.musicplayer.ui.screen.navigation.Display
 import com.wawa.musicplayer.ui.screen.navigation.Editor
 import com.wawa.musicplayer.ui.screen.navigation.NavigationViewModel
 import com.wawa.musicplayer.ui.screen.navigation.NowPlaying
+import com.wawa.musicplayer.ui.screen.navigation.PlaylistTab
 import com.wawa.musicplayer.ui.screen.navigation.TopLevelDestination
 import com.wawa.musicplayer.ui.screen.playlist.PlaylistViewModel
 import com.wawa.musicplayer.ui.screen.upload.UploadError
@@ -77,7 +84,32 @@ fun MusicPlayerApp(
     Scaffold(
       modifier = Modifier.fillMaxSize(),
       topBar = {
-        MusicPlayerAppTopBar()
+        val screen = navigationState.backStackByTab[PlaylistTab]!!.last()
+
+        MusicPlayerAppTopBar(
+          windowSizeClass = windowSizeClass,
+          hasNavigationIcon = navigationState.selectedTab == PlaylistTab && (screen == Editor || screen == NowPlaying),
+          onNavigateBack = { navigationViewModel.navigateBackOnTab(PlaylistTab) }
+        )
+      },
+      floatingActionButton = {
+        if (navigationState.selectedTab == PlaylistTab) {
+          val screen = navigationState.backStackByTab[PlaylistTab]!!.last()
+
+          if (screen == Display || screen == Editor) {
+            val to = when (screen) {
+              Display -> Editor
+              Editor -> NowPlaying
+            }
+
+            MusicPlayerAppFloatingActionButton(
+              windowSizeClass = windowSizeClass,
+              onClick = {
+                navigationViewModel.navigateToScreenOnTab(PlaylistTab, to)
+              }
+            )
+          }
+        }
       }
     ) { innerPadding ->
       val context = LocalContext.current
@@ -125,18 +157,6 @@ fun MusicPlayerApp(
         navigationState = navigationState,
         uploadState = uploadState,
         playlistUiState = playlistUiState,
-        onNavigateToEditor = {
-          navigationViewModel.navigateToScreenOnTab(
-            tab = navigationState.selectedTab,
-            to = Editor
-          )
-        },
-        onNavigateToNowPlaying = {
-          navigationViewModel.navigateToScreenOnTab(
-            tab = navigationState.selectedTab,
-            to = NowPlaying
-          )
-        },
         onNavigateBack = {
           navigationViewModel.navigateBackOnTab(
             tab = navigationState.selectedTab
@@ -157,21 +177,120 @@ fun MusicPlayerApp(
           uploadViewModel.setUploadProcessingState(null)
           uploadViewModel.setSaveState(null)
         },
+        onItemClick = playlistViewModel::selectTrackById,
         modifier = Modifier.padding(innerPadding)
       )
     }
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicPlayerAppTopBar(
-  modifier: Modifier = Modifier
+  windowSizeClass: WindowSizeClass,
+  modifier: Modifier = Modifier,
+  hasNavigationIcon: Boolean = false,
+  onNavigateBack: () -> Unit = {}
+) {
+  when (windowSizeClass.widthSizeClass) {
+    WindowWidthSizeClass.Compact -> BaseAppTopBar(
+      modifier = modifier,
+      hasNavigationIcon = hasNavigationIcon,
+      onNavigateBack = onNavigateBack
+    )
+
+    WindowWidthSizeClass.Medium -> BaseAppTopBar(
+      modifier = modifier,
+      hasNavigationIcon = hasNavigationIcon,
+      onNavigateBack = onNavigateBack
+    )
+
+    WindowWidthSizeClass.Expanded -> BaseAppTopBar(
+      modifier = modifier,
+      hasNavigationIcon = hasNavigationIcon,
+      onNavigateBack = onNavigateBack,
+      iconSize = 32.dp
+    )
+
+    else -> BaseAppTopBar(
+      modifier = modifier,
+      hasNavigationIcon = hasNavigationIcon,
+      onNavigateBack = onNavigateBack
+    )
+  }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BaseAppTopBar(
+  modifier: Modifier = Modifier,
+  hasNavigationIcon: Boolean = false,
+  onNavigateBack: () -> Unit = {},
+  iconSize: Dp = 24.dp
 ) {
   TopAppBar(
     title = {
       Text(text = stringResource(R.string.app_name))
     },
-    modifier = modifier
+    modifier = modifier,
+    navigationIcon = {
+      if (hasNavigationIcon) {
+        Icon(
+          imageVector = ImageVector.vectorResource(R.drawable.arrow_back_24px),
+          contentDescription = null,
+          modifier = Modifier
+            .clickable(onClick = onNavigateBack)
+            .size(iconSize)
+        )
+      }
+    }
   )
+}
+
+@Composable
+fun MusicPlayerAppFloatingActionButton(
+  windowSizeClass: WindowSizeClass,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  when (windowSizeClass.widthSizeClass) {
+    WindowWidthSizeClass.Compact -> BaseFloatingActionButton(
+      onClick = onClick,
+      modifier = modifier
+    )
+
+    WindowWidthSizeClass.Medium -> BaseFloatingActionButton(
+      onClick = onClick,
+      modifier = modifier.size(64.dp),
+      iconSize = 32.dp
+    )
+
+    WindowWidthSizeClass.Expanded -> BaseFloatingActionButton(
+      onClick = onClick,
+      modifier = modifier.size(80.dp),
+      iconSize = 40.dp
+    )
+
+    else -> BaseFloatingActionButton(
+      onClick = onClick,
+      modifier = modifier
+    )
+  }
+}
+
+@Composable
+fun BaseFloatingActionButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  iconSize: Dp = 24.dp
+) {
+  FloatingActionButton(
+    onClick = onClick,
+    modifier = modifier
+  ) {
+    Icon(
+      imageVector = ImageVector.vectorResource(R.drawable.arrow_forward_24px),
+      contentDescription = null,
+      modifier = Modifier.size(iconSize)
+    )
+  }
 }
