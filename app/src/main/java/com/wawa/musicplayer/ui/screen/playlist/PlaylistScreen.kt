@@ -24,6 +24,7 @@ fun PlaylistScreen(
       DisplayScreen(
         windowSizeClass = windowSizeClass,
         playlistUiState = playlistUiState,
+        onNavigateBack = onNavigateBack,
         onItemClick = onItemClick,
         modifier = modifier
       )

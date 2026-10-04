@@ -1,5 +1,6 @@
 package com.wawa.musicplayer.ui.screen.playlist
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,12 +41,14 @@ import com.wawa.musicplayer.data.Track
 fun DisplayScreen(
   windowSizeClass: WindowSizeClass,
   playlistUiState: PlaylistUiState,
+  onNavigateBack: () -> Unit,
   onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> CompactDisplayScreen(
       playlistUiState = playlistUiState,
+      onNavigateBack = onNavigateBack,
       onItemClick = onItemClick,
       modifier = modifier
         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -53,6 +56,7 @@ fun DisplayScreen(
 
     WindowWidthSizeClass.Medium -> MediumDisplayScreen(
       playlistUiState = playlistUiState,
+      onNavigateBack = onNavigateBack,
       onItemClick = onItemClick,
       modifier = modifier
         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -66,8 +70,10 @@ fun DisplayScreen(
 
     else -> CompactDisplayScreen(
       playlistUiState = playlistUiState,
+      onNavigateBack = onNavigateBack,
       onItemClick = onItemClick,
       modifier = modifier
+        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     )
   }
 }
@@ -75,10 +81,11 @@ fun DisplayScreen(
 @Composable
 fun CompactDisplayScreen(
   playlistUiState: PlaylistUiState,
+  onNavigateBack: () -> Unit,
   onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  if (playlistUiState.selectedTrackId == null) {
+  if (playlistUiState.selectedTrackIdOnDisplay == null) {
     TrackList(
       selectedTrack = null,
       tracks = playlistUiState.allTracks,
@@ -86,9 +93,10 @@ fun CompactDisplayScreen(
       modifier = modifier
     )
   } else {
+    BackHandler { onNavigateBack() }
     TrackDetail(
       track = playlistUiState.allTracks.find { track ->
-        track.id == playlistUiState.selectedTrackId
+        track.id == playlistUiState.selectedTrackIdOnDisplay
       }!!,
       modifier = modifier
     )
@@ -98,10 +106,11 @@ fun CompactDisplayScreen(
 @Composable
 fun MediumDisplayScreen(
   playlistUiState: PlaylistUiState,
+  onNavigateBack: () -> Unit,
   onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  if (playlistUiState.selectedTrackId == null) {
+  if (playlistUiState.selectedTrackIdOnDisplay == null) {
     TrackList(
       selectedTrack = null,
       tracks = playlistUiState.allTracks,
@@ -109,9 +118,10 @@ fun MediumDisplayScreen(
       modifier = modifier
     )
   } else {
+    BackHandler { onNavigateBack() }
     TrackDetail(
       track = playlistUiState.allTracks.find { track ->
-        track.id == playlistUiState.selectedTrackId
+        track.id == playlistUiState.selectedTrackIdOnDisplay
       }!!,
       modifier = modifier,
       imageSize = 180.dp
@@ -127,7 +137,7 @@ fun ExpandedDisplayScreen(
 ) {
   Row(modifier = modifier) {
     val selectedTrack = playlistUiState.allTracks.find { track ->
-      track.id == playlistUiState.selectedTrackId
+      track.id == playlistUiState.selectedTrackIdOnDisplay
     }
 
     Box(

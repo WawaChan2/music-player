@@ -17,14 +17,17 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(private val playlistRepository: PlaylistRepository) :
   ViewModel() {
-  private val selectedTrackIdFlow = MutableStateFlow<Int?>(null)
+  private val selectedTrackIdOnDisplayFlow = MutableStateFlow<Int?>(null)
+  private val selectedTrackIdOnEditorFlow = MutableStateFlow<Int?>(null)
 
   val playlistUiState: StateFlow<PlaylistUiState> = combine(
-    selectedTrackIdFlow,
+    selectedTrackIdOnDisplayFlow,
+    selectedTrackIdOnEditorFlow,
     playlistRepository.getAllTracks()
-  ) { selectedTrackId, allTracks ->
+  ) { selectedTrackIdOnDisplay, selectedTrackIdOnEditor, allTracks ->
     PlaylistUiState(
-      selectedTrackId = selectedTrackId,
+      selectedTrackIdOnDisplay = selectedTrackIdOnDisplay,
+      selectedTrackIdOnEditor = selectedTrackIdOnEditor,
       allTracks = allTracks
     )
   }.stateIn(
@@ -33,8 +36,12 @@ class PlaylistViewModel @Inject constructor(private val playlistRepository: Play
     initialValue = PlaylistUiState()
   )
 
-  fun selectTrackById(id: Int) {
-    selectedTrackIdFlow.update { id }
+  fun selectTrackByIdOnDisplay(id: Int?) {
+    selectedTrackIdOnDisplayFlow.update { id }
+  }
+
+  fun selectTrackByIdOnEditor(id: Int?) {
+    selectedTrackIdOnEditorFlow.update { id }
   }
 
   fun updateTrack(track: Track) {

@@ -88,8 +88,29 @@ fun MusicPlayerApp(
 
         MusicPlayerAppTopBar(
           windowSizeClass = windowSizeClass,
-          hasNavigationIcon = navigationState.selectedTab == PlaylistTab && (screen == Editor || screen == NowPlaying),
-          onNavigateBack = { navigationViewModel.navigateBackOnTab(PlaylistTab) }
+          hasNavigationIcon = navigationState.selectedTab == PlaylistTab &&
+              (screen == Editor || screen == NowPlaying) ||
+              windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded &&
+              playlistUiState.selectedTrackIdOnDisplay != null,
+          onNavigateBack = {
+            if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+              navigationViewModel.navigateBackOnTab(PlaylistTab)
+            } else {
+              when (screen) {
+                Display if playlistUiState.selectedTrackIdOnDisplay != null -> {
+                  playlistViewModel.selectTrackByIdOnDisplay(null)
+                }
+
+                Editor if playlistUiState.selectedTrackIdOnEditor != null -> {
+                  playlistViewModel.selectTrackByIdOnEditor(null)
+                }
+
+                else -> {
+                  navigationViewModel.navigateBackOnTab(PlaylistTab)
+                }
+              }
+            }
+          }
         )
       },
       floatingActionButton = {
@@ -158,9 +179,23 @@ fun MusicPlayerApp(
         uploadState = uploadState,
         playlistUiState = playlistUiState,
         onNavigateBack = {
-          navigationViewModel.navigateBackOnTab(
-            tab = navigationState.selectedTab
-          )
+          if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+            navigationViewModel.navigateBackOnTab(PlaylistTab)
+          } else {
+            when (navigationState.backStackByTab[PlaylistTab]!!.last()) {
+              Display if playlistUiState.selectedTrackIdOnDisplay != null -> {
+                playlistViewModel.selectTrackByIdOnDisplay(null)
+              }
+
+              Editor if playlistUiState.selectedTrackIdOnEditor != null -> {
+                playlistViewModel.selectTrackByIdOnEditor(null)
+              }
+
+              else -> {
+                navigationViewModel.navigateBackOnTab(PlaylistTab)
+              }
+            }
+          }
         },
         onTrackTitleTextFieldChange = uploadViewModel::onTrackTitleChange,
         onArtistNameTextFieldChange = uploadViewModel::onArtistNameChange,
@@ -177,7 +212,7 @@ fun MusicPlayerApp(
           uploadViewModel.setUploadProcessingState(null)
           uploadViewModel.setSaveState(null)
         },
-        onItemClick = playlistViewModel::selectTrackById,
+        onItemClick = playlistViewModel::selectTrackByIdOnDisplay,
         modifier = Modifier.padding(innerPadding)
       )
     }
