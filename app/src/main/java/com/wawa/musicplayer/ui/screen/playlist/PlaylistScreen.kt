@@ -15,6 +15,7 @@ fun PlaylistScreen(
   playlistUiState: PlaylistUiState,
   onNavigateBack: () -> Unit,
   onItemClick: (Int) -> Unit,
+  onOptionClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   val currentScreen = navigationState.backStackByTab[navigationState.selectedTab]!!.last()
@@ -33,7 +34,9 @@ fun PlaylistScreen(
     Editor -> {
       EditorScreen(
         windowSizeClass = windowSizeClass,
+        playlistUiState = playlistUiState,
         onNavigateBack = onNavigateBack,
+        onOptionClick = onOptionClick,
         modifier = modifier
       )
     }

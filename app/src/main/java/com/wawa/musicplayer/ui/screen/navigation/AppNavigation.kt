@@ -27,6 +27,7 @@ fun AppNavigation(
   onCancelButtonClick: () -> Unit,
   onDialogClose: () -> Unit,
   onItemClick: (Int) -> Unit,
+  onOptionClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (navigationState.selectedTab) {
@@ -36,6 +37,7 @@ fun AppNavigation(
       playlistUiState = playlistUiState,
       onNavigateBack = onNavigateBack,
       onItemClick = onItemClick,
+      onOptionClick = onOptionClick,
       modifier = modifier
         .fillMaxSize()
     )

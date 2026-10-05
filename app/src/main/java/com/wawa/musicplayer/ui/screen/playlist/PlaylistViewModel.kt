@@ -2,6 +2,7 @@ package com.wawa.musicplayer.ui.screen.playlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wawa.musicplayer.R
 import com.wawa.musicplayer.data.PlaylistRepository
 import com.wawa.musicplayer.data.Track
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,16 +20,28 @@ class PlaylistViewModel @Inject constructor(private val playlistRepository: Play
   ViewModel() {
   private val selectedTrackIdOnDisplayFlow = MutableStateFlow<Int?>(null)
   private val selectedTrackIdOnEditorFlow = MutableStateFlow<Int?>(null)
+  private val selectedOptionIndexFlow = MutableStateFlow(0)
+  private val optionsFlow = MutableStateFlow(
+    listOf(
+      R.drawable.play_arrow_24px,
+      R.drawable.edit_24px,
+      R.drawable.delete_24px
+    )
+  )
 
   val playlistUiState: StateFlow<PlaylistUiState> = combine(
     selectedTrackIdOnDisplayFlow,
     selectedTrackIdOnEditorFlow,
-    playlistRepository.getAllTracks()
-  ) { selectedTrackIdOnDisplay, selectedTrackIdOnEditor, allTracks ->
+    playlistRepository.getAllTracks(),
+    selectedOptionIndexFlow,
+    optionsFlow
+  ) { selectedTrackIdOnDisplay, selectedTrackIdOnEditor, allTracks, selectedOptionIndex, options ->
     PlaylistUiState(
       selectedTrackIdOnDisplay = selectedTrackIdOnDisplay,
       selectedTrackIdOnEditor = selectedTrackIdOnEditor,
-      allTracks = allTracks
+      allTracks = allTracks,
+      selectedOptionIndex = selectedOptionIndex,
+      options = options
     )
   }.stateIn(
     scope = viewModelScope,
@@ -42,6 +55,10 @@ class PlaylistViewModel @Inject constructor(private val playlistRepository: Play
 
   fun selectTrackByIdOnEditor(id: Int?) {
     selectedTrackIdOnEditorFlow.update { id }
+  }
+
+  fun selectOptionIndex(index: Int) {
+    selectedOptionIndexFlow.update { index }
   }
 
   fun updateTrack(track: Track) {

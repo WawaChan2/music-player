@@ -219,6 +219,7 @@ fun MusicPlayerApp(
           uploadViewModel.setSaveState(null)
         },
         onItemClick = playlistViewModel::selectTrackByIdOnDisplay,
+        onOptionClick = playlistViewModel::selectOptionIndex,
         modifier = Modifier.padding(innerPadding)
       )
     }
@@ -301,14 +302,14 @@ fun MusicPlayerAppFloatingActionButton(
 
     WindowWidthSizeClass.Medium -> BaseFloatingActionButton(
       onClick = onClick,
-      modifier = modifier.size(64.dp),
-      iconSize = 32.dp
+      modifier = modifier.size(56.dp),
+      iconSize = 28.dp
     )
 
     WindowWidthSizeClass.Expanded -> BaseFloatingActionButton(
       onClick = onClick,
-      modifier = modifier.size(80.dp),
-      iconSize = 40.dp
+      modifier = modifier.size(64.dp),
+      iconSize = 32.dp
     )
 
     else -> BaseFloatingActionButton(
