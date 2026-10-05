@@ -85,7 +85,11 @@ fun CompactDisplayScreen(
   onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  if (playlistUiState.selectedTrackIdOnDisplay == null) {
+  val selectedTrack = playlistUiState.allTracks.find { track ->
+    track.id == playlistUiState.selectedTrackIdOnDisplay
+  }
+
+  if (selectedTrack == null) {
     TrackList(
       selectedTrack = null,
       tracks = playlistUiState.allTracks,
@@ -95,9 +99,7 @@ fun CompactDisplayScreen(
   } else {
     BackHandler { onNavigateBack() }
     TrackDetail(
-      track = playlistUiState.allTracks.find { track ->
-        track.id == playlistUiState.selectedTrackIdOnDisplay
-      }!!,
+      track = selectedTrack,
       modifier = modifier
     )
   }
@@ -110,7 +112,11 @@ fun MediumDisplayScreen(
   onItemClick: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  if (playlistUiState.selectedTrackIdOnDisplay == null) {
+  val selectedTrack = playlistUiState.allTracks.find { track ->
+    track.id == playlistUiState.selectedTrackIdOnDisplay
+  }
+
+  if (selectedTrack == null) {
     TrackList(
       selectedTrack = null,
       tracks = playlistUiState.allTracks,
@@ -120,9 +126,7 @@ fun MediumDisplayScreen(
   } else {
     BackHandler { onNavigateBack() }
     TrackDetail(
-      track = playlistUiState.allTracks.find { track ->
-        track.id == playlistUiState.selectedTrackIdOnDisplay
-      }!!,
+      track = selectedTrack,
       modifier = modifier,
       imageSize = 180.dp
     )

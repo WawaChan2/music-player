@@ -81,27 +81,33 @@ fun MusicPlayerApp(
       else -> NavigationSuiteType.NavigationBar
     }
   ) {
+    val screen = navigationState.backStackByTab[PlaylistTab]!!.last()
+    val selectedTrackOnDisplay = playlistUiState.allTracks.find { track ->
+      track.id == playlistUiState.selectedTrackIdOnDisplay
+    }
+    val selectedTrackOnEditor = playlistUiState.allTracks.find { track ->
+      track.id == playlistUiState.selectedTrackIdOnEditor
+    }
+
     Scaffold(
       modifier = Modifier.fillMaxSize(),
       topBar = {
-        val screen = navigationState.backStackByTab[PlaylistTab]!!.last()
-
         MusicPlayerAppTopBar(
           windowSizeClass = windowSizeClass,
           hasNavigationIcon = navigationState.selectedTab == PlaylistTab &&
               (screen == Editor || screen == NowPlaying) ||
               windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded &&
-              playlistUiState.selectedTrackIdOnDisplay != null,
+              selectedTrackOnDisplay != null,
           onNavigateBack = {
             if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
               navigationViewModel.navigateBackOnTab(PlaylistTab)
             } else {
               when (screen) {
-                Display if playlistUiState.selectedTrackIdOnDisplay != null -> {
+                Display if selectedTrackOnDisplay != null -> {
                   playlistViewModel.selectTrackByIdOnDisplay(null)
                 }
 
-                Editor if playlistUiState.selectedTrackIdOnEditor != null -> {
+                Editor if selectedTrackOnEditor != null -> {
                   playlistViewModel.selectTrackByIdOnEditor(null)
                 }
 
@@ -182,12 +188,12 @@ fun MusicPlayerApp(
           if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
             navigationViewModel.navigateBackOnTab(PlaylistTab)
           } else {
-            when (navigationState.backStackByTab[PlaylistTab]!!.last()) {
-              Display if playlistUiState.selectedTrackIdOnDisplay != null -> {
+            when (screen) {
+              Display if selectedTrackOnDisplay != null -> {
                 playlistViewModel.selectTrackByIdOnDisplay(null)
               }
 
-              Editor if playlistUiState.selectedTrackIdOnEditor != null -> {
+              Editor if selectedTrackOnEditor != null -> {
                 playlistViewModel.selectTrackByIdOnEditor(null)
               }
 
