@@ -10,8 +10,13 @@ import com.wawa.musicplayer.ui.theme.MusicPlayerTheme
 @Composable
 fun UploadFormPreview() {
   MusicPlayerTheme {
+    val uploadState = UploadState()
+
     UploadForm(
-      uploadState = UploadState(),
+      trackTitle = uploadState.trackTitle,
+      artistName = uploadState.artistName,
+      lyrics = uploadState.lyrics,
+      imageModel = uploadState.bitmap,
       onTrackTitleTextFieldChange = {},
       onArtistNameTextFieldChange = {},
       onLyricsTextFieldChange = {},

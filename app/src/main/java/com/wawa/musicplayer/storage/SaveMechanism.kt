@@ -49,8 +49,8 @@ private fun saveBitmap(
 ) {
   FileOutputStream(file).use { outputStream ->
     if (!bitmap.compress(
-        Bitmap.CompressFormat.JPEG,
-        90,
+        Bitmap.CompressFormat.PNG,
+        100,
         outputStream
       )
     ) {

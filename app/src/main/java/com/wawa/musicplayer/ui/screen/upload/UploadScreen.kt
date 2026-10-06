@@ -157,7 +157,10 @@ fun CompactUploadScreen(
       },
       success = {
         UploadForm(
-          uploadState = uploadState,
+          trackTitle = uploadState.trackTitle,
+          artistName = uploadState.artistName,
+          lyrics = uploadState.lyrics,
+          imageModel = uploadState.bitmap,
           onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
           onArtistNameTextFieldChange = onArtistNameTextFieldChange,
           onLyricsTextFieldChange = onLyricsTextFieldChange,
@@ -220,7 +223,10 @@ fun MediumUploadScreen(
       },
       success = {
         UploadForm(
-          uploadState = uploadState,
+          trackTitle = uploadState.trackTitle,
+          artistName = uploadState.artistName,
+          lyrics = uploadState.lyrics,
+          imageModel = uploadState.bitmap,
           onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
           onArtistNameTextFieldChange = onArtistNameTextFieldChange,
           onLyricsTextFieldChange = onLyricsTextFieldChange,
@@ -289,7 +295,10 @@ fun ExpandedUploadScreen(
       },
       success = {
         UploadForm(
-          uploadState = uploadState,
+          trackTitle = uploadState.trackTitle,
+          artistName = uploadState.artistName,
+          lyrics = uploadState.lyrics,
+          imageModel = uploadState.bitmap,
           onTrackTitleTextFieldChange = onTrackTitleTextFieldChange,
           onArtistNameTextFieldChange = onArtistNameTextFieldChange,
           onLyricsTextFieldChange = onLyricsTextFieldChange,
@@ -406,7 +415,10 @@ fun LoadingSpinner(
 
 @Composable
 fun UploadForm(
-  uploadState: UploadState,
+  trackTitle: String,
+  artistName: String,
+  lyrics: String,
+  imageModel: Any?,
   onTrackTitleTextFieldChange: (String) -> Unit,
   onArtistNameTextFieldChange: (String) -> Unit,
   onLyricsTextFieldChange: (String) -> Unit,
@@ -429,13 +441,13 @@ fun UploadForm(
     verticalArrangement = Arrangement.spacedBy(verticalSpacing),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    val isTrackTitleTextFieldStateValid = uploadState.trackTitle.isNotBlank()
-    val isArtistNameTextFieldStateValid = uploadState.artistName.isNotBlank()
+    val isTrackTitleTextFieldStateValid = trackTitle.isNotBlank()
+    val isArtistNameTextFieldStateValid = artistName.isNotBlank()
 
     Box(modifier = Modifier.padding(16.dp)) {
       AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
-          .data(uploadState.bitmap)
+          .data(imageModel)
           .crossfade(true)
           .build(),
         contentDescription = null,
@@ -471,7 +483,7 @@ fun UploadForm(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
       ) {
         TextField(
-          value = uploadState.trackTitle,
+          value = trackTitle,
           onValueChange = onTrackTitleTextFieldChange,
           modifier = Modifier.weight(1f),
           label = { Text(text = stringResource(R.string.track_title_text_field)) },
@@ -484,7 +496,7 @@ fun UploadForm(
           singleLine = true
         )
         TextField(
-          value = uploadState.artistName,
+          value = artistName,
           onValueChange = onArtistNameTextFieldChange,
           modifier = Modifier.weight(1f),
           label = { Text(text = stringResource(R.string.artist_name_text_field)) },
@@ -499,7 +511,7 @@ fun UploadForm(
       }
     } else {
       TextField(
-        value = uploadState.trackTitle,
+        value = trackTitle,
         onValueChange = onTrackTitleTextFieldChange,
         modifier = Modifier.fillMaxWidth(widthFraction),
         label = { Text(text = stringResource(R.string.track_title_text_field)) },
@@ -512,7 +524,7 @@ fun UploadForm(
         singleLine = true
       )
       TextField(
-        value = uploadState.artistName,
+        value = artistName,
         onValueChange = onArtistNameTextFieldChange,
         modifier = Modifier.fillMaxWidth(widthFraction),
         label = { Text(text = stringResource(R.string.artist_name_text_field)) },
@@ -527,7 +539,7 @@ fun UploadForm(
     }
 
     OutlinedTextField(
-      value = uploadState.lyrics,
+      value = lyrics,
       onValueChange = onLyricsTextFieldChange,
       modifier = Modifier.fillMaxWidth(widthFraction),
       label = { Text(text = stringResource(R.string.lyrics_text_field)) },
@@ -654,16 +666,19 @@ fun AlertDialogs(
       spinnerSize = iconSize,
       strokeWidth = strokeWidth
     )
+
     SaveError -> ErrorAlertDialog(
       onClose = onClose,
       modifier = modifier,
       iconSize = iconSize
     )
+
     SaveSuccess -> SuccessAlertDialog(
       onClose = onClose,
       modifier = modifier,
       iconSize = iconSize
     )
+
     else -> Unit
   }
 }
